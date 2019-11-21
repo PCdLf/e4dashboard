@@ -26,6 +26,7 @@ e4ui <- function(){
 
                   shinydashboard::box(
                     title = "Data input",
+                    tags$p("Choose a directory containing E4 ZIP files."),
                     actionButton("btn_choose_dir", "Folder", icon = icon("folder-open")),
                     tags$br(),
                     tags$br(),
@@ -40,6 +41,9 @@ e4ui <- function(){
                     tags$br(),
                     shinyjs::hidden(
                       actionButton("btn_read_data", "Read data", icon = icon("chart-line"))
+                    ),
+                    shinyjs::hidden(
+                      actionButton("btn_reset", "Start over", icon = icon("refresh"))
                     ),
                     htmlOutput("msg_data_read")
                   )
@@ -67,19 +71,22 @@ e4ui <- function(){
 
               fluidPage(
                 fluidRow(
-                  tabBox(width = 12, title = "Visualization",
+                  tabBox(width = 12, title = "Visualization", id = "plottabbox",
                     tabPanel(
                       title = tagList(icon("cogs"), "Settings"),
+                      value = "settingstab",
                       
                       checkboxInput("check_add_calendar_annotation", 
                                     label = "Calendar annotations",
                                     value = TRUE),
-                      textInput("txt_plot_main_title", "Title")
+                      textInput("txt_plot_main_title", "Title"),
+                      actionButton("btn_make_plot", "Make plot", icon = icon("check"))
                       
                       
                     ),
                     tabPanel(
                       title = tagList(icon("bar-chart"), "Plot"),
+                      value = "plottab",
                       withSpinner(dygraphOutput("dygraph_current_data1", height = "140px")),
                       dygraphOutput("dygraph_current_data2", height = "140px"),
                       dygraphOutput("dygraph_current_data3", height = "140px"),

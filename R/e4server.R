@@ -1,13 +1,15 @@
 e4server <- function(input, output, session) {
 
-  
+#----- Setup -----
   rv <- reactiveValues(
-    data = NULL,
-    datafolder = NULL,
-    calendar = NULL
+    data = readRDS("rvdata.rds"),
+    datafolder = "C:\\repos\\BVI\\Sensor_data\\Peter",
+    calendar = readRDS("rvcalendar.rds")
   )
   
+  hide_tab("plottab")
   
+#----- Choose directory, read files ----- 
   observeEvent(input$btn_choose_dir, {
     
     # Werkt alleen op Windows!
@@ -32,6 +34,7 @@ e4server <- function(input, output, session) {
   observeEvent(input$pick_zips, {
     
     shinyjs::show("btn_read_data")
+    shinyjs::show("btn_reset")
     
   })
   
@@ -57,7 +60,7 @@ e4server <- function(input, output, session) {
       if(length(fns) > 1){
         rv$data <- rbind_e4(data)
       } else {
-        rv$data <- data
+        rv$data <- data[[1]]
       }
       
     })
@@ -73,9 +76,8 @@ e4server <- function(input, output, session) {
       }
       rv$calendar <- read_calendar(findxl)
     }
-    
-    
-    
+
+
     # Message: data read!
     output$msg_data_read <- renderUI({
       tags$p("Data read successfully!", style = "color: blue;")
@@ -83,6 +85,22 @@ e4server <- function(input, output, session) {
 
     
   })
+  
+  
+  observeEvent(input$btn_reset, {
+    
+    rv$data <- NULL
+    rv$datafolder <- NULL
+    rv$calendar <- NULL
+    shinyjs::hide("pick_zips")
+    shinyjs::hide("btn_read_data")
+    shinyjs::hide("btn_reset")
+    output$msg_data_read <- renderUI("")
+      
+  })
+  
+  
+#----- Calendar data -----
   
   # Make sure to use DT:: to use the right renderDataTable (shiny has an old version)
   output$dt_calendar <- DT::renderDataTable({
@@ -98,9 +116,13 @@ e4server <- function(input, output, session) {
     
   })
   
-  observe({
+  
+#----- Visualization -----
+  observeEvent(input$btn_make_plot, {
     
     req(rv$data)
+    show_tab("plottab")
+    updateTabsetPanel(session, "plottabbox", selected = "plottab")
     
     if(input$check_add_calendar_annotation){
       annotatedata <- rv$calendar

@@ -3,7 +3,7 @@ Type: Package
 Title: Shiny Application for E4 Data
 Version: 0.1.0
 Author: Peter
-Depends: e4tools, shiny, shinydashboard, zip, dplyr, lubridate, dygraphs, shinyjs, shinyWidgets, shinycssloaders, readxl
+Depends: e4tools, shiny, shinydashboard, glue, zip, dplyr, lubridate, dygraphs, shinyjs, shinyWidgets, shinycssloaders, readxl
 Maintainer: Peter <yourself@somewhere.net>
 Description: More about what it does (maybe more than one line)
     Use four spaces when indenting paragraphs within the Description.
