@@ -1,0 +1,13 @@
+Package: e4dashboard
+Type: Package
+Title: Shiny Application for E4 Data
+Version: 0.1.0
+Author: Peter
+Depends: e4tools, shiny, shinydashboard, zip, dplyr, lubridate, dygraphs, shinyjs, shinyWidgets, shinycssloaders
+Maintainer: Peter <yourself@somewhere.net>
+Description: More about what it does (maybe more than one line)
+    Use four spaces when indenting paragraphs within the Description.
+License: What license is it under?
+Encoding: UTF-8
+LazyData: true
+RoxygenNote: 6.1.1
