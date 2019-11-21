@@ -76,11 +76,31 @@ e4ui <- function(){
                       title = tagList(icon("cogs"), "Settings"),
                       value = "settingstab",
                       
-                      checkboxInput("check_add_calendar_annotation", 
-                                    label = "Calendar annotations",
-                                    value = TRUE),
-                      textInput("txt_plot_main_title", "Title"),
-                      actionButton("btn_make_plot", "Make plot", icon = icon("check"))
+                      fluidPage(
+                        fluidRow(
+                          column(6,
+                                 tags$label(class = "control-label", "Annotations"),
+                                 checkboxInput("check_add_calendar_annotation", 
+                                               label = "Calendar events",
+                                               value = TRUE),
+                                 textInput("txt_plot_main_title", "Title"),
+                                 checkboxGroupInput("check_average_lines", "Add averages", 
+                                                    choices = c("EDA","HR","TEMP","MOVE"))
+                          ),
+                          column(6,
+                                 
+                                 numericRangeInput("slide_yaxis_eda", "EDA Y-axis range", value = c(0,20)),
+                                 numericRangeInput("slide_yaxis_hr",  "HR Y-axis range", value = c(0,20)),
+                                 numericRangeInput("slide_yaxis_temp","TEMP Y-axis range", value = c(0,20)),
+                                 numericRangeInput("slide_yaxis_move","MOVE Y-axis range", value = c(0,20))
+                                 )
+                        ),
+                        fluidRow(
+                          actionButton("btn_make_plot", "Make plot", icon = icon("check"))  
+                        )
+                      )
+                      
+                      
                       
                       
                     ),
@@ -99,7 +119,25 @@ e4ui <- function(){
               )
 
       ),
-      tabItem("tabAnalysis"),
+      tabItem("tabAnalysis",
+              
+            fluidPage(
+              fluidRow(
+                shinydashboard::box(width = 12, title = "Visualization", 
+                
+                                  
+                     actionButton("btn_do_analysis", "Run analysis"),
+                     tags$hr(),
+                     verbatimTextOutput("dt_analysis_output"),
+                     actionButton("btn_download_analysis", "Download")
+                                    
+                )
+              )
+            )
+                
+              
+              
+      ),
       tabItem("tabReport")
     )
 

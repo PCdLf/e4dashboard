@@ -2,9 +2,10 @@ e4server <- function(input, output, session) {
 
 #----- Setup -----
   rv <- reactiveValues(
-    data = readRDS("rvdata.rds"),
-    datafolder = "C:\\repos\\BVI\\Sensor_data\\Peter",
-    calendar = readRDS("rvcalendar.rds")
+    data = NULL, #readRDS("rvdata.rds"),
+    datafolder = NULL, #"C:\\repos\\BVI\\Sensor_data\\Peter",
+    calendar = NULL, #readRDS("rvcalendar.rds"),
+    timeseries = NULL, #readRDS("rvtimeseries.rds") 
   )
   
   hide_tab("plottab")
@@ -65,6 +66,13 @@ e4server <- function(input, output, session) {
       
     })
     
+    rv$timeseries <- list(
+      EDA = as_timeseries(rv$data$EDA, name_col = "EDA"),
+      HR = as_timeseries(rv$data$HR, name_col = "HR"),
+      TEMP = as_timeseries(rv$data$TEMP, name_col = "Temperature"),
+      MOVE = as_timeseries(rv$data$ACC, index = 5, name_col = "Movement")
+    )
+    
     findxl <- dir(rv$datafolder, pattern="[.]xls|xlsx", full.names = TRUE)
     if(length(findxl)){
       if(length(findxl) > 1){
@@ -99,6 +107,35 @@ e4server <- function(input, output, session) {
       
   })
   
+  observe({
+
+    ts <- rv$timeseries
+    req(ts)
+    nice_range <- function(x){
+      round(range(x, na.rm = TRUE), digits = 2)
+    }
+
+    updateNumericRangeInput(session, "slide_yaxis_eda", label = "EDA Y-axis range", 
+                            value = nice_range(ts$EDA))
+    updateNumericRangeInput(session, "slide_yaxis_hr", label = "HR Y-axis range", 
+                            value = nice_range(ts$HR))
+    updateNumericRangeInput(session, "slide_yaxis_temp", label = "TEMP Y-axis range",
+                            value = nice_range(ts$TEMP))
+    updateNumericRangeInput(session, "slide_yaxis_move", label = "MOVE Y-axis range",
+                            value = nice_range(ts$MOVE))
+    
+    
+  })
+
+  yaxis_ranges <- reactive(
+    list(
+      EDA = input$slide_yaxis_eda,
+      HR = input$slide_yaxis_hr,
+      TEMP = input$slide_yaxis_temp,
+      MOVE = input$slide_yaxis_move
+    )
+  )
+
   
 #----- Calendar data -----
   
@@ -120,7 +157,7 @@ e4server <- function(input, output, session) {
 #----- Visualization -----
   observeEvent(input$btn_make_plot, {
     
-    req(rv$data)
+    req(rv$timeseries)
     show_tab("plottab")
     updateTabsetPanel(session, "plottabbox", selected = "plottab")
     
@@ -130,9 +167,12 @@ e4server <- function(input, output, session) {
       annotatedata <- NULL
     }
     
-    plots <- e4_timeseries_plot(rv$data,
+    plots <- e4_timeseries_plot(rv$timeseries,
                                 main_title = input$txt_plot_main_title,
-                                calendar_data = annotatedata)
+                                calendar_data = annotatedata,
+                                average_lines =  input$check_average_lines,
+                                yaxis_ranges =  yaxis_ranges()
+                                )
     
     output$dygraph_current_data1 <- renderDygraph(plots[[1]])
     output$dygraph_current_data2 <- renderDygraph(plots[[2]])
@@ -141,5 +181,15 @@ e4server <- function(input, output, session) {
     
   })
 
+#----- Analysis -----
+  
+  observeEvent(input$btn_do_analysis, {
+    
+    
+    result <- calculate_heartrate_params(rv$data$IBI, rv$data$EDA)
+    output$dt_analysis_output <- renderPrint(t(as.data.frame(out)))
+    
+    
+  })
 
 }

@@ -4,6 +4,8 @@
 e4_timeseries_plot <- function(data, 
                                main_title = "",
                                calendar_data = NULL,
+                               average_lines = "",
+                               yaxis_ranges = NULL,
                                colours = c("#1874CD", "#FF7F00", "#458B00", "#68228B")){
   
   
@@ -12,8 +14,10 @@ e4_timeseries_plot <- function(data,
                          ylab_title = FALSE, 
                          draw_x_axis = FALSE, 
                          color = "black",
+                         average_line = FALSE,
                          events = calendar_data,
-                         events_label = FALSE){
+                         events_label = FALSE,
+                         yaxis_range = NULL){
     
     begin_time <- min(index(ts)) - 30*60
     
@@ -23,6 +27,20 @@ e4_timeseries_plot <- function(data,
                 drawXAxis = draw_x_axis,
                 colors = color)
       # dyAxis(name = "x", valueRange = c(begin_time, NULL))
+    
+    if(average_line){
+      
+      out <- out %>%
+        dyLimit(mean(ts, na.rm = TRUE), "Mean",
+                strokePattern = "solid", color = "blue")
+      
+    }
+    
+    if(!is.null(yaxis_range)){
+      out <- out %>%
+        dyAxis("y", valueRange = yaxis_range)
+    }
+    
     
     if(!is.null(events)){
       
@@ -56,20 +74,28 @@ e4_timeseries_plot <- function(data,
   }
   
   list(
-    my_dygraph(as_timeseries(data$EDA, name_col = "EDA"), 
+    my_dygraph(data$EDA, 
                main_title = main_title, 
                ylab_title = "EDA", 
                events_label = TRUE,
+               average_line = "EDA" %in% average_lines,
+               yaxis_range = yaxis_ranges$EDA,
                color = colours[1]),
-    my_dygraph(as_timeseries(data$HR, name_col = "HR"), 
+    my_dygraph(data$HR, 
                ylab_title = "HR", 
+               average_line = "HR" %in% average_lines,
+               yaxis_range = yaxis_ranges$HR,
                color = colours[2]),
-    my_dygraph(as_timeseries(data$TEMP, name_col = "Temperature"), 
+    my_dygraph(data$TEMP, 
                ylab_title = "Temperature", 
+               average_line = "TEMP" %in% average_lines,
+               yaxis_range = yaxis_ranges$TEMP,
                color = colours[3]),
-    my_dygraph(as_timeseries(data$ACC, index = 5, name_col = "Movement"), 
+    my_dygraph(data$MOVE, 
                draw_x_axis = TRUE, 
                ylab_title = "Movement", 
+               average_line = "MOVE" %in% average_lines,
+               yaxis_range = yaxis_ranges$MOVE,
                color = colours[4]) %>%
     dyRangeSelector()
   )

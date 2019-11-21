@@ -2,10 +2,16 @@ pacman::p_load(e4tools, shiny, shinydashboard, zip, dplyr, lubridate,
                dygraphs, shinyjs, shinyWidgets, shinycssloaders,
                readxl, DT)
 
+library(RHRV)
+library (varian)
+
+
 source("R/e4server.R")
 source("R/e4ui.R")
 source("R/functions.R")
 source("R/dygraph_functions.R")
+
+source("R/heartrate.R")
 
 if(packageVersion("e4tools") < "0.1.1")stop("Please update e4tools!")
 
