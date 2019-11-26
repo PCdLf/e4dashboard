@@ -1,4 +1,4 @@
-#' Plot the E4 timeseries data
+#' e4_timeseries_plot
 #' @description Creates 4 graphs of the E4 data.
 #' @param data List of e4 data.
 #' @param main_title Main title of the plot, defaults to empty string.
@@ -7,8 +7,6 @@
 #' @param yaxis_ranges What Range do you want to give the y axis?
 #' @param colours The colours of the graph, defaults to blue, orange, red, green
 #' @export
-
-
 
 e4_timeseries_plot <- function(data, 
                                main_title = "",

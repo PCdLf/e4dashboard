@@ -1,8 +1,8 @@
 #' e4server
 #' @description responsible for server transformations
-#' @param input standar input, output, session follwing Shinyapp
-#' @param output standar input, output, session follwing Shinyapp
-#' @param session standar input, output, session follwing Shinyapp
+#' @param input standard input, output, session follwing Shinyapp
+#' @param output standard input, output, session follwing Shinyapp
+#' @param session standard input, output, session follwing Shinyapp
 #' @export
 
 e4server <- function(input, output, session) {
@@ -199,4 +199,15 @@ e4server <- function(input, output, session) {
     
   })
 
+}
+
+
+#' e4dashboard
+#' @description creates a function for the e4 dashboard.
+#' @export
+
+e4dashboard <- function(){
+  
+  shiny::shinyApp(e4ui(), e4server)
+  
 }

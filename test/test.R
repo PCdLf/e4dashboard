@@ -1,6 +1,7 @@
 pacman::p_load(e4tools, shiny, shinydashboard, zip, dplyr, lubridate, 
                dygraphs, shinyjs, shinyWidgets, shinycssloaders,
-               readxl, DT)
+               readxl, DT, glue, xts)
+
 
 library(RHRV)
 library (varian)
