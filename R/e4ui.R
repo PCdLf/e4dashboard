@@ -1,4 +1,6 @@
-
+#' e4ui
+#' @description responsible for user interface
+#' @export
 
 e4ui <- function(){
 

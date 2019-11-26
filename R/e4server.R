@@ -1,4 +1,9 @@
-
+#' e4server
+#' @description responsible for server transformations
+#' @param input standar input, output, session follwing Shinyapp
+#' @param output standar input, output, session follwing Shinyapp
+#' @param session standar input, output, session follwing Shinyapp
+#' @export
 
 e4server <- function(input, output, session) {
 

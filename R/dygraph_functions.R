@@ -111,6 +111,12 @@ e4_timeseries_plot <- function(data,
 }
 
 
+#' read_calendar
+#' @description Read in calendar if one is provided in the folder.
+#' @param  fn ..
+#' @export
+
+
 read_calendar <- function(fn){
   
   rectify_datetime <- function(date, time){

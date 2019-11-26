@@ -1,6 +1,6 @@
-
-
-
+#' calculate_heartrate_params
+#' @description Function to calculate certain HR params
+#' @export
 
 
 calculate_heartrate_params <- function(ibi, eda){
