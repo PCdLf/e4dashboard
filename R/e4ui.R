@@ -19,7 +19,7 @@ e4ui <- function(){
 
   body <- dashboardBody(
     useShinyjs(),
-
+#----- Choose directory, read files ----- 
     tabItems(
       tabItem("tabData",
 
@@ -53,6 +53,7 @@ e4ui <- function(){
 
               )
       ),
+#----- Calendar data -----
       tabItem("tabCalendar",
               
               fluidPage(
@@ -69,6 +70,7 @@ e4ui <- function(){
               )
               
       ),
+#----- Visualization -----
       tabItem("tabVisualization",
 
               fluidPage(
@@ -121,6 +123,7 @@ e4ui <- function(){
               )
 
       ),
+#----- Analysis -----
       tabItem("tabAnalysis",
               
             fluidPage(
