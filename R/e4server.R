@@ -1,3 +1,5 @@
+
+
 e4server <- function(input, output, session) {
 
 #----- Setup -----
@@ -5,7 +7,7 @@ e4server <- function(input, output, session) {
     data = NULL, #readRDS("rvdata.rds"),
     datafolder = NULL, #"C:\\repos\\BVI\\Sensor_data\\Peter",
     calendar = NULL, #readRDS("rvcalendar.rds"),
-    timeseries = NULL, #readRDS("rvtimeseries.rds") 
+    timeseries = NULL #readRDS("rvtimeseries.rds") 
   )
   
   hide_tab("plottab")

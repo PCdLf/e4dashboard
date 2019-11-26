@@ -1,3 +1,12 @@
+#' Plot the E4 timeseries data
+#' @description Creates 4 graphs of the E4 data.
+#' @param data List of e4 data.
+#' @param main_title Main title of the plot, defaults to empty string.
+#' @param calendar_data Name to give to the timeseries data.
+#' @param average_lines Do you want to add averages to the plot
+#' @param yaxis_ranges What Range do you want to give the y axis?
+#' @param colours The colours of the graph, defaults to blue, orange, red, green
+#' @export
 
 
 
