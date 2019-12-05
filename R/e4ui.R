@@ -12,8 +12,8 @@ e4ui <- function(){
       menuItem("Calendar", tabName = "tabCalendar", icon = icon("home")),
       menuItem("Visualization", tabName = "tabVisualization", icon = icon("home")),
       menuItem("Analysis", tabName = "tabAnalysis", icon = icon("home")),
-      menuItem("Report", tabName = "tabReport", icon = icon("home")),
-      actionButton("browse","browser()")
+      menuItem("Report", tabName = "tabReport", icon = icon("home"))
+      #actionButton("browse","browser()")
     )
 
   )
@@ -212,7 +212,7 @@ e4ui <- function(){
                                                       
                      actionButton("btn_do_analysis", "Run analysis"),
                      tags$hr(),
-                     verbatimTextOutput("dt_analysis_output"),
+                     dataTableOutput("dt_analysis_output"),
                      actionButton("btn_download_analysis", "Download")
                                     
                 )
@@ -222,7 +222,24 @@ e4ui <- function(){
               
               
       ),
-      tabItem("tabReport")
+      tabItem("tabReport",
+              
+              fluidPage(
+                fluidRow(
+                  shinydashboard::box(width = 8, title = "Report", 
+                                      
+                                      
+                      tags$p("Download a report of the current analysis."),
+                      downloadButton("btn_download_report", "Download Report",
+                                   icon = icon("file-download"),
+                                   class = "btn btn-larger btn-success")
+                                      
+                                      
+                  )
+                )
+              )
+              
+      )
     )
 
 

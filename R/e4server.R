@@ -13,7 +13,7 @@ e4server <- function(input, output, session) {
   disable_link("tabCalendar")
   disable_link("tabVisualization")
   disable_link("tabAnalysis")
-  disable_link("tabReport")
+ # disable_link("tabReport")
   
   options(shiny.maxRequestSize=30*1024^2) 
   
@@ -22,7 +22,8 @@ e4server <- function(input, output, session) {
     data = NULL, #readRDS("rvdata.rds"),
     zip_files = NULL,
     calendar = NULL, #readRDS("rvcalendar.rds"),
-    timeseries = NULL #readRDS("rvtimeseries.rds") 
+    timeseries = NULL,
+    last_analysis = NULL #readRDS("rvtimeseries.rds") 
   )
   
   hide_tab("plottab")
@@ -325,14 +326,40 @@ e4server <- function(input, output, session) {
                         datetime >= start,
                         datetime <= end)
     
-    result <- calculate_heartrate_params(data$IBI, data$EDA)
+    rv$last_analysis <- calculate_heartrate_params(data$IBI, data$EDA)
     
-    output$dt_analysis_output <- renderPrint(t(as.data.frame(result)))
+    output$dt_analysis_output <- DT::renderDT({
+      
+      datatable(t(as.data.frame(rv$last_analysis)))
+      
+    })
+    
+    enable_link("tabReport")
     
     
   })
+  
+  
+#----- Report -----
+  
+  # See https://shiny.rstudio.com/articles/generating-reports.html
+  output$btn_download_report <- downloadHandler(
+    
+    filename = "e4_analysis.html",
+    content = function(file){
+      
+      tempReport <- file.path(tempdir(), "report.Rmd")
+      file.copy("www/report.Rmd", tempReport, overwrite = TRUE)
+      
+      rmarkdown::render(tempReport, output_file = file)
+      
+    }
+    
+  )
+  
 
 }
+
 
 
 #' e4dashboard
