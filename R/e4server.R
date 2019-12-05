@@ -4,6 +4,7 @@
 #' @param output standard input, output, session follwing Shinyapp
 #' @param session standard input, output, session follwing Shinyapp
 #' @export
+#' @importFrom tcltk tk_choose.files
 
 e4server <- function(input, output, session) {
 
@@ -18,11 +19,13 @@ e4server <- function(input, output, session) {
   hide_tab("plottab")
   
 #----- Choose directory, read files ----- 
-  observeEvent(input$btn_choose_dir, {
+  observeEvent(input$btn_choose_files, {
     
     # Werkt alleen op Windows!
-    rv$datafolder <- choose.dir(default = "c:/repos/BVI/Sensor_data", #getwd(), 
-                         caption = "Choose a ZIP file with E4 data.")
+    rv$datafolder <- tcltk::tk_choose.files(default = "c:/repos/BVI/Sensor_data", #!!!!!
+                         caption = "Choose ZIP file(s) with E4 data.",
+                         filters = matrix(c("ZIP files",".zip"),ncol=2)
+                         )
     
     # See which, if any, zip files are in the chosen folder
     zips <- dir(rv$datafolder, pattern = "[.]zip$", full.names = TRUE)

@@ -1,7 +1,7 @@
 #' e4ui
 #' @description responsible for user interface
 #' @export
-
+#' @importFrom shinycssloaders withSpinner
 e4ui <- function(){
 
   sidebar <- dashboardSidebar(
@@ -29,7 +29,7 @@ e4ui <- function(){
                   shinydashboard::box(
                     title = "Data input",
                     tags$p("Choose a directory containing E4 ZIP files."),
-                    actionButton("btn_choose_dir", "Folder", icon = icon("folder-open")),
+                    actionButton("btn_choose_files", "Choose ZIP Files", icon = icon("folder-open")),
                     tags$br(),
                     tags$br(),
                     tags$br(),

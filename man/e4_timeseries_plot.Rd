@@ -4,14 +4,9 @@
 \alias{e4_timeseries_plot}
 \title{e4_timeseries_plot}
 \usage{
-e4_timeseries_plot(
-  data,
-  main_title = "",
-  calendar_data = NULL,
-  average_lines = "",
-  yaxis_ranges = NULL,
-  colours = c("#1874CD", "#FF7F00", "#458B00", "#68228B")
-)
+e4_timeseries_plot(data, main_title = "", calendar_data = NULL,
+  average_lines = "", yaxis_ranges = NULL, colours = c("#1874CD",
+  "#FF7F00", "#458B00", "#68228B"))
 }
 \arguments{
 \item{data}{List of e4 data.}
