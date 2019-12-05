@@ -12,7 +12,8 @@ e4ui <- function(){
       menuItem("Calendar", tabName = "tabCalendar", icon = icon("home")),
       menuItem("Visualization", tabName = "tabVisualization", icon = icon("home")),
       menuItem("Analysis", tabName = "tabAnalysis", icon = icon("home")),
-      menuItem("Report", tabName = "tabReport", icon = icon("home"))
+      menuItem("Report", tabName = "tabReport", icon = icon("home")),
+      actionButton("browse","browser()")
     )
 
   )
@@ -184,9 +185,31 @@ e4ui <- function(){
               
             fluidPage(
               fluidRow(
-                shinydashboard::box(width = 12, title = "Visualization", 
-                
-                                  
+                shinydashboard::box(width = 12, title = "Analysis", 
+
+                     tags$h4("Select begin date"),
+  
+                     dateInput("date_analysis_start", label = "Select Date",
+                               value = NULL, min = NULL, max = NULL,
+                               width = 200),
+                      
+                     side_by_side(
+                       numericInput("time_hour_start", "Hour", value = 0, width = 200),
+                       numericInput("time_minute_start", "Minutes", value = 0, width = 200),
+                       numericInput("time_second_start", "Seconds", value = 0, width = 200)
+                     ),tags$br(),
+                     
+                     tags$h4("Select end date"),
+                     dateInput("date_analysis_end", label = "Select Date",
+                               value = NULL, min = NULL, max = NULL,
+                               width = 200),
+                     
+                     side_by_side(
+                       numericInput("time_hour_end", "Hour", value = 0, width = 200),
+                       numericInput("time_minute_end", "Minutes", value = 0, width = 200),
+                       numericInput("time_second_end", "Seconds", value = 0, width = 200)
+                     ),tags$br(),
+                                                      
                      actionButton("btn_do_analysis", "Run analysis"),
                      tags$hr(),
                      verbatimTextOutput("dt_analysis_output"),

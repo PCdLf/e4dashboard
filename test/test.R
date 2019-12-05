@@ -4,7 +4,7 @@ pacman::p_load(e4tools, shiny, shinydashboard, zip, dplyr, lubridate,
 
 
 library(RHRV)
-library (varian)
+library(varian)
 
 
 source("R/e4server.R")

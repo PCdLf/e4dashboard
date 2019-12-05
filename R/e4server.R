@@ -8,6 +8,7 @@
 
 e4server <- function(input, output, session) {
 
+  observeEvent(input$browse, browser())
   
   disable_link("tabCalendar")
   disable_link("tabVisualization")
@@ -25,6 +26,7 @@ e4server <- function(input, output, session) {
   )
   
   hide_tab("plottab")
+  hide_tab("plotannotations")
   
 #----- Choose directory, read files ----- 
   observeEvent(input$select_zip_files, {
@@ -93,8 +95,34 @@ e4server <- function(input, output, session) {
     enable_link("tabCalendar")
     enable_link("tabVisualization")
     enable_link("tabAnalysis")
+  
+    # Fill analysis times
+    tms <- range(rv$data[[1]]$DateTime)
+    updateDateInput(session, "date_analysis_start",
+                    value = min(as.Date(tms)),
+                    min = min(as.Date(tms)),
+                    max = max(as.Date(tms))
+                    )
+    updateDateInput(session, "date_analysis_end",
+                    value = max(as.Date(tms)),
+                    min = min(as.Date(tms)),
+                    max = max(as.Date(tms))
+    )
     
-
+    updateNumericInput(session, "time_hour_start",
+                       value = hour(min(tms)), min = 0, max = 23)
+    updateNumericInput(session, "time_hour_end",
+                       value = hour(max(tms)), min = 0, max = 23)
+    
+    updateNumericInput(session, "time_minute_start",
+                       value = minute(min(tms)), min = 0, max = 59)
+    updateNumericInput(session, "time_minute_end",
+                       value = minute(max(tms)), min = 0, max = 59)
+    
+    updateNumericInput(session, "time_second_start",
+                       value = second(min(tms)), min = 0, max = 59)
+    updateNumericInput(session, "time_second_end",
+                       value = second(max(tms)), min = 0, max = 59)
     
   })
   
@@ -174,6 +202,10 @@ e4server <- function(input, output, session) {
     
     req(rv$timeseries)
     show_tab("plottab")
+    if(nrow(rv$calendar)){
+      show_tab("plotannotations")
+    }
+    
     updateTabsetPanel(session, "plottabbox", selected = "plottab")
     
     if(input$check_add_calendar_annotation){
@@ -196,18 +228,22 @@ e4server <- function(input, output, session) {
     
   })
   
-  output$dt_annotations_visible <- DT::renderDT({
+  current_visible_annotations <- reactive({
     
-    req(rv$calendar)
-    
-    rv$calendar %>%
-      mutate(Date = format(Date, "%Y-%m-%d"),
-             Start = format(Start, "%H:%M:%S"),
-             End = format(End, "%H:%M:%S")
-      ) %>% 
-      datatable()
-    
+      # !!!! WATCH THE TIMEZONE!
+      # Problem: cannot read timezone info from rv$calendar$Start, should
+      # be saved there (as tzone attribute) when reading calendar
+      ran <- suppressWarnings({
+        ymd_hms(input$dygraph_current_data4_date_window, tz = "CET")
+      })
+      
+      filter(rv$calendar,
+             !((Start > ran[[2]] && End > ran[[2]]) |
+             (Start < ran[[1]] && End < ran[[1]]))
+             )
+      
   })
+  
   
   observeEvent(input$btn_panel_float, {
     
@@ -217,7 +253,18 @@ e4server <- function(input, output, session) {
 
   output$dt_panel_annotations <- DT::renderDT({
     
-    rv$calendar[1:3,] %>%
+    current_visible_annotations() %>%
+      mutate(Date = format(Date, "%Y-%m-%d"),
+             Start = format(Start, "%H:%M:%S"),
+             End = format(End, "%H:%M:%S")
+      ) %>%
+      datatable(width = 500)
+    
+  })
+  
+  output$dt_annotations_visible <- DT::renderDT({
+    
+    current_visible_annotations() %>%
       mutate(Date = format(Date, "%Y-%m-%d"),
              Start = format(Start, "%H:%M:%S"),
              End = format(End, "%H:%M:%S")
@@ -228,11 +275,59 @@ e4server <- function(input, output, session) {
   
 #----- Analysis -----
   
+  
+  #range(as.Date(rv$data[[1]]$DateTime))
+  
   observeEvent(input$btn_do_analysis, {
     
     
-    result <- calculate_heartrate_params(rv$data$IBI, rv$data$EDA)
-    output$dt_analysis_output <- renderPrint(t(as.data.frame(out)))
+    start <- ISOdatetime(
+      year = year(input$date_analysis_start),
+      month = month(input$date_analysis_start),
+      day = day(input$date_analysis_start),
+      hour = input$time_hour_start,
+      min = input$time_minute_start,
+      sec = input$time_second_start,
+      tz = "UTC"
+    )
+    
+    end <- ISOdatetime(
+      year = year(input$date_analysis_end),
+      month = month(input$date_analysis_end),
+      day = day(input$date_analysis_end),
+      hour = input$time_hour_end,
+      min = input$time_minute_end,
+      sec = input$time_second_end,
+      tz = "UTC"
+    )
+    
+    data <- rv$data
+    
+    data$IBI$datetime <- force_tz(rv$data$IBI$DateTime, "UTC")
+    data$EDA$datetime <- force_tz(rv$data$EDA$DateTime, "UTC")
+    data$ACC$datetime <- force_tz(rv$data$ACC$DateTime, "UTC")
+    data$TEMP$datetime <- force_tz(rv$data$TEMP$DateTime, "UTC")
+    data$HR$datetime <- force_tz(rv$data$HR$DateTime, "UTC")
+    
+    data$IBI <- filter(data$IBI, 
+                          datetime >= start,
+                          datetime <= end)
+    data$EDA <- filter(data$EDA, 
+                          datetime >= start,
+                          datetime <= end)
+    data$ACC <- filter(data$ACC, 
+                       datetime >= start,
+                       datetime <= end)
+    data$TEMP <- filter(data$TEMP, 
+                       datetime >= start,
+                       datetime <= end)
+    data$HR <- filter(data$HR, 
+                        datetime >= start,
+                        datetime <= end)
+    
+    result <- calculate_heartrate_params(data$IBI, data$EDA)
+    
+    output$dt_analysis_output <- renderPrint(t(as.data.frame(result)))
     
     
   })
