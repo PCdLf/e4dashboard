@@ -13,7 +13,7 @@ e4server <- function(input, output, session) {
   disable_link("tabCalendar")
   disable_link("tabVisualization")
   disable_link("tabAnalysis")
- # disable_link("tabReport")
+  disable_link("tabReport")
   
   options(shiny.maxRequestSize=30*1024^2) 
   
@@ -133,9 +133,18 @@ e4server <- function(input, output, session) {
     rv$data <- NULL
     rv$datafolder <- NULL
     rv$calendar <- NULL
+    rv$last_analysis <- NULL
+    rv$timeseries <- NULL
+    
     shinyjs::hide("pick_zips")
     shinyjs::hide("btn_read_data")
     shinyjs::hide("btn_reset")
+    
+    disable_link("tabCalendar")
+    disable_link("tabVisualization")
+    disable_link("tabAnalysis")
+    disable_link("tabReport")
+    
     output$msg_data_read <- renderUI("")
       
   })
