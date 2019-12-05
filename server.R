@@ -1,13 +1,5 @@
-#' e4server
-#' @description responsible for server transformations
-#' @param input standard input, output, session follwing Shinyapp
-#' @param output standard input, output, session follwing Shinyapp
-#' @param session standard input, output, session follwing Shinyapp
-#' @export
-#' @importFrom tcltk tk_choose.files
-
-e4server <- function(input, output, session) {
-
+function(input, output, session) {
+  
   observeEvent(input$browse, browser())
   
   disable_link("tabCalendar")
@@ -17,7 +9,7 @@ e4server <- function(input, output, session) {
   
   options(shiny.maxRequestSize=30*1024^2) 
   
-#----- Setup -----
+  #----- Setup -----
   rv <- reactiveValues(
     data = NULL, #readRDS("rvdata.rds"),
     zip_files = NULL,
@@ -29,7 +21,7 @@ e4server <- function(input, output, session) {
   hide_tab("plottab")
   hide_tab("plotannotations")
   
-#----- Choose directory, read files ----- 
+  #----- Choose directory, read files ----- 
   observeEvent(input$select_zip_files, {
     
     rv$zip_files <- input$select_zip_files
@@ -86,7 +78,7 @@ e4server <- function(input, output, session) {
       MOVE = as_timeseries(rv$data$ACC, index = 5, name_col = "Movement")
     )
     
-
+    
     # Message: data read!
     output$msg_data_read <- renderUI({
       tags$p("Data read successfully!", style = "color: blue;")
@@ -96,14 +88,14 @@ e4server <- function(input, output, session) {
     enable_link("tabCalendar")
     enable_link("tabVisualization")
     enable_link("tabAnalysis")
-  
+    
     # Fill analysis times
     tms <- range(rv$data[[1]]$DateTime)
     updateDateInput(session, "date_analysis_start",
                     value = min(as.Date(tms)),
                     min = min(as.Date(tms)),
                     max = max(as.Date(tms))
-                    )
+    )
     updateDateInput(session, "date_analysis_end",
                     value = max(as.Date(tms)),
                     min = min(as.Date(tms)),
@@ -146,17 +138,17 @@ e4server <- function(input, output, session) {
     disable_link("tabReport")
     
     output$msg_data_read <- renderUI("")
-      
+    
   })
   
   observe({
-
+    
     ts <- rv$timeseries
     req(ts)
     nice_range <- function(x){
       round(range(x, na.rm = TRUE), digits = 2)
     }
-
+    
     updateNumericRangeInput(session, "slide_yaxis_eda", label = "EDA Y-axis range", 
                             value = nice_range(ts$EDA))
     updateNumericRangeInput(session, "slide_yaxis_hr", label = "HR Y-axis range", 
@@ -168,7 +160,7 @@ e4server <- function(input, output, session) {
     
     
   })
-
+  
   yaxis_ranges <- reactive(
     list(
       EDA = input$slide_yaxis_eda,
@@ -177,9 +169,9 @@ e4server <- function(input, output, session) {
       MOVE = input$slide_yaxis_move
     )
   )
-
   
-#----- Calendar data -----
+  
+  #----- Calendar data -----
   
   
   observeEvent(input$select_calendar_file, {
@@ -201,13 +193,13 @@ e4server <- function(input, output, session) {
       mutate(Date = format(Date, "%Y-%m-%d"),
              Start = format(Start, "%H:%M:%S"),
              End = format(End, "%H:%M:%S")
-             ) %>% 
+      ) %>% 
       datatable()
     
   })
   
   
-#----- Visualization -----
+  #----- Visualization -----
   observeEvent(input$btn_make_plot, {
     
     req(rv$timeseries)
@@ -229,7 +221,7 @@ e4server <- function(input, output, session) {
                                 calendar_data = annotatedata,
                                 average_lines =  input$check_average_lines,
                                 yaxis_ranges =  yaxis_ranges()
-                                )
+    )
     
     output$dygraph_current_data1 <- renderDygraph(plots[[1]])
     output$dygraph_current_data2 <- renderDygraph(plots[[2]])
@@ -240,18 +232,18 @@ e4server <- function(input, output, session) {
   
   current_visible_annotations <- reactive({
     
-      # !!!! WATCH THE TIMEZONE!
-      # Problem: cannot read timezone info from rv$calendar$Start, should
-      # be saved there (as tzone attribute) when reading calendar
-      ran <- suppressWarnings({
-        ymd_hms(input$dygraph_current_data4_date_window, tz = "CET")
-      })
-      
-      filter(rv$calendar,
-             !((Start > ran[[2]] && End > ran[[2]]) |
-             (Start < ran[[1]] && End < ran[[1]]))
-             )
-      
+    # !!!! WATCH THE TIMEZONE!
+    # Problem: cannot read timezone info from rv$calendar$Start, should
+    # be saved there (as tzone attribute) when reading calendar
+    ran <- suppressWarnings({
+      ymd_hms(input$dygraph_current_data4_date_window, tz = "CET")
+    })
+    
+    filter(rv$calendar,
+           !((Start > ran[[2]] && End > ran[[2]]) |
+               (Start < ran[[1]] && End < ran[[1]]))
+    )
+    
   })
   
   
@@ -260,7 +252,7 @@ e4server <- function(input, output, session) {
     shinyjs::show("thispanel")
     
   })
-
+  
   output$dt_panel_annotations <- DT::renderDT({
     
     current_visible_annotations() %>%
@@ -283,7 +275,7 @@ e4server <- function(input, output, session) {
     
   })
   
-#----- Analysis -----
+  #----- Analysis -----
   
   
   #range(as.Date(rv$data[[1]]$DateTime))
@@ -320,20 +312,20 @@ e4server <- function(input, output, session) {
     data$HR$datetime <- force_tz(rv$data$HR$DateTime, "UTC")
     
     data$IBI <- filter(data$IBI, 
-                          datetime >= start,
-                          datetime <= end)
+                       datetime >= start,
+                       datetime <= end)
     data$EDA <- filter(data$EDA, 
-                          datetime >= start,
-                          datetime <= end)
+                       datetime >= start,
+                       datetime <= end)
     data$ACC <- filter(data$ACC, 
                        datetime >= start,
                        datetime <= end)
     data$TEMP <- filter(data$TEMP, 
-                       datetime >= start,
-                       datetime <= end)
-    data$HR <- filter(data$HR, 
                         datetime >= start,
                         datetime <= end)
+    data$HR <- filter(data$HR, 
+                      datetime >= start,
+                      datetime <= end)
     
     rv$last_analysis <- calculate_heartrate_params(data$IBI, data$EDA)
     
@@ -349,7 +341,7 @@ e4server <- function(input, output, session) {
   })
   
   
-#----- Report -----
+  #----- Report -----
   
   # See https://shiny.rstudio.com/articles/generating-reports.html
   output$btn_download_report <- downloadHandler(
@@ -366,17 +358,7 @@ e4server <- function(input, output, session) {
     
   )
   
-
-}
-
-
-
-#' e4dashboard
-#' @description creates a function for the e4 dashboard.
-#' @export
-
-e4dashboard <- function(){
-  
-  shiny::shinyApp(e4ui(), e4server)
   
 }
+
+

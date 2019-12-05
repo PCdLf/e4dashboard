@@ -1,8 +1,4 @@
-#' e4ui
-#' @description responsible for user interface
-#' @export
-#' @importFrom shinycssloaders withSpinner
-e4ui <- function(){
+function(){
 
   sidebar <- dashboardSidebar(
 
