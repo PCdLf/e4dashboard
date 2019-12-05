@@ -11,7 +11,7 @@ e4server <- function(input, output, session) {
 #----- Setup -----
   rv <- reactiveValues(
     data = NULL, #readRDS("rvdata.rds"),
-    datafolder = NULL, #"C:\\repos\\BVI\\Sensor_data\\Peter",
+    zip_files = NULL,
     calendar = NULL, #readRDS("rvcalendar.rds"),
     timeseries = NULL #readRDS("rvtimeseries.rds") 
   )
@@ -19,40 +19,32 @@ e4server <- function(input, output, session) {
   hide_tab("plottab")
   
 #----- Choose directory, read files ----- 
-  observeEvent(input$btn_choose_files, {
+  observeEvent(input$select_zip_files, {
     
-    # Werkt alleen op Windows!
-    rv$datafolder <- tcltk::tk_choose.files(default = "c:/repos/BVI/Sensor_data", #!!!!!
-                         caption = "Choose ZIP file(s) with E4 data.",
-                         filters = matrix(c("ZIP files",".zip"),ncol=2)
-                         )
-    
-    # See which, if any, zip files are in the chosen folder
-    zips <- dir(rv$datafolder, pattern = "[.]zip$", full.names = TRUE)
-    
-    # The names of the vector are used as the displayed options in pickerInput.
-    # The actual value of the vector (here: the full path name) will be assigned
-    # to the input slot (here: input$pick_zips)
-    names(zips) <- basename(zips)
-    updatePickerInput(session, "pick_zips", choices = zips)
+    rv$zip_files <- input$select_zip_files
     
     # Display the picker, after the choices are updated.
-    shinyjs::show("pick_zips")
-    
-  })
-  
-  
-  observeEvent(input$pick_zips, {
-    
     shinyjs::show("btn_read_data")
     shinyjs::show("btn_reset")
+  })
+  
+  output$msg_files_selected <- renderUI({
+    
+    req(rv$zip_files)
+    n <- nrow(rv$zip_files)
+    if(n > 0){
+      tags$p(glue("You have selected {n} ZIP files."))
+    }
     
   })
+  
+  
   
   observeEvent(input$btn_read_data, {
     
     # Read selected ZIP files
-    fns <- input$pick_zips
+    fns <- rv$zip_files$datapath
+    fn_names <- rv$zip_files$name
     
     # Read data into a list (Each element of the list contents from 1 zip file)
     data <- list()
@@ -61,7 +53,7 @@ e4server <- function(input, output, session) {
       
       for(i in seq_along(fns)){
         
-        incProgress(1/n, detail = basename(fns[i]))
+        incProgress(1/n, detail = fn_names[i])
         data[[i]] <- read_e4(fns[i])
         
       }
@@ -83,18 +75,6 @@ e4server <- function(input, output, session) {
       MOVE = as_timeseries(rv$data$ACC, index = 5, name_col = "Movement")
     )
     
-    findxl <- dir(rv$datafolder, pattern="[.]xls|xlsx", full.names = TRUE)
-    if(length(findxl)){
-      if(length(findxl) > 1){
-        showModal(modalDialog(
-          title = "Problem reading calendar data",
-          "More than one XLS(X) file found in directory!",
-          easyClose = TRUE
-        ))
-      }
-      rv$calendar <- read_calendar(findxl)
-    }
-
 
     # Message: data read!
     output$msg_data_read <- renderUI({
@@ -148,6 +128,17 @@ e4server <- function(input, output, session) {
 
   
 #----- Calendar data -----
+  
+  
+  observeEvent(input$select_calendar_file, {
+    
+    dfr <- input$select_calendar_file
+    
+    rv$calendar <- read_calendar(dfr$datapath)
+    
+    shinyjs::hide("calendar_in_block")
+    shinyjs::show("calendar_block")
+  })
   
   # Make sure to use DT:: to use the right renderDataTable (shiny has an old version)
   output$dt_calendar <- DT::renderDataTable({

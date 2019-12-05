@@ -19,6 +19,8 @@ e4ui <- function(){
 
   body <- dashboardBody(
     useShinyjs(),
+    includeCSS("www/buttons.css"),
+    
 #----- Choose directory, read files ----- 
     tabItems(
       tabItem("tabData",
@@ -27,22 +29,23 @@ e4ui <- function(){
                 fluidRow(
 
                   shinydashboard::box(
+                    width = 6,
                     title = "Data input",
-                    tags$p("Choose a directory containing E4 ZIP files."),
-                    actionButton("btn_choose_files", "Choose ZIP Files", icon = icon("folder-open")),
+                    tags$p("Click Browse to select E4 zip files to use in the application"),
+                    tags$p("The data will not be permanently stored on the server."),
+                    fileInput("select_zip_files",
+                              label = "Choose ZIP file(s)", 
+                              multiple = TRUE, 
+                              accept = ".zip",
+                              buttonLabel = "Browse..."),
+                    
+                    uiOutput("msg_files_selected"),
                     tags$br(),
                     tags$br(),
-                    tags$br(),
+                    
                     shinyjs::hidden(
-                      pickerInput("pick_zips", "Select ZIP files",
-                                  multiple = TRUE,
-                                  # see ?pickerOptions for many other options
-                                  options = pickerOptions(actionsBox = TRUE), 
-                                  choices = "")
-                    ),
-                    tags$br(),
-                    shinyjs::hidden(
-                      actionButton("btn_read_data", "Read data", icon = icon("chart-line"))
+                      actionButton("btn_read_data", "Read data", icon = icon("chart-line"),
+                                   class = "btn btn-success")
                     ),
                     shinyjs::hidden(
                       actionButton("btn_reset", "Start over", icon = icon("refresh"))
@@ -58,11 +61,28 @@ e4ui <- function(){
               
               fluidPage(
                 fluidRow(
-                  shinydashboard::box(width = 12,
+                  shinydashboard::box(width = 8,
                                       title = "Calendar",
-                             
-                        withSpinner(
-                          dataTableOutput("dt_calendar")
+                                      
+                        tags$div(id = "calendar_in_block",
+                          tags$p("Optionally, select an Excel spreadsheet with Calendar data."),
+                          tags$p("Please consult the documentation for the format of the calendar."),
+                              
+                          fileInput("select_calendar_file",
+                                    label = "Choose Calendar (XLS/XLSX) file", 
+                                    multiple = FALSE, 
+                                    accept = c(".xls",".xlsx"),
+                                    buttonLabel = "Browse...")
+                        ),
+                        
+                        tags$br(),
+                        shinyjs::hidden(
+                          tags$div(id = "calendar_block",
+                               tags$h4("Calendar data"),
+                               withSpinner(
+                                 dataTableOutput("dt_calendar")
+                               )           
+                          )
                         )
                                
                   )
