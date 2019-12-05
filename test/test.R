@@ -14,6 +14,7 @@ source("R/dygraph_functions.R")
 
 source("R/heartrate.R")
 
-if(packageVersion("e4tools") < "0.1.1")stop("Please update e4tools!")
+# Method to check if a package has at least some version number.
+#if(packageVersion("e4tools") < "0.1.1")stop("Please update e4tools!")
 
 shiny::shinyApp(e4ui(), e4server)

@@ -1,3 +1,9 @@
+.inactivelink{
+  pointer-events: none;
+  cursor: default;
+  color: grey !important;
+}
+
 .btn-success{
   color: #fff !important;
   background-color: #28a745  !important;

@@ -8,6 +8,14 @@
 
 e4server <- function(input, output, session) {
 
+  
+  disable_link("tabCalendar")
+  disable_link("tabVisualization")
+  disable_link("tabAnalysis")
+  disable_link("tabReport")
+  
+  options(shiny.maxRequestSize=30*1024^2) 
+  
 #----- Setup -----
   rv <- reactiveValues(
     data = NULL, #readRDS("rvdata.rds"),
@@ -80,6 +88,12 @@ e4server <- function(input, output, session) {
     output$msg_data_read <- renderUI({
       tags$p("Data read successfully!", style = "color: blue;")
     })
+    
+    
+    enable_link("tabCalendar")
+    enable_link("tabVisualization")
+    enable_link("tabAnalysis")
+    
 
     
   })
@@ -181,7 +195,37 @@ e4server <- function(input, output, session) {
     output$dygraph_current_data4 <- renderDygraph(plots[[4]])
     
   })
+  
+  output$dt_annotations_visible <- DT::renderDT({
+    
+    req(rv$calendar)
+    
+    rv$calendar %>%
+      mutate(Date = format(Date, "%Y-%m-%d"),
+             Start = format(Start, "%H:%M:%S"),
+             End = format(End, "%H:%M:%S")
+      ) %>% 
+      datatable()
+    
+  })
+  
+  observeEvent(input$btn_panel_float, {
+    
+    shinyjs::show("thispanel")
+    
+  })
 
+  output$dt_panel_annotations <- DT::renderDT({
+    
+    rv$calendar[1:3,] %>%
+      mutate(Date = format(Date, "%Y-%m-%d"),
+             Start = format(Start, "%H:%M:%S"),
+             End = format(End, "%H:%M:%S")
+      ) %>%
+      datatable(width = 500)
+    
+  })
+  
 #----- Analysis -----
   
   observeEvent(input$btn_do_analysis, {

@@ -19,7 +19,7 @@ e4ui <- function(){
 
   body <- dashboardBody(
     useShinyjs(),
-    includeCSS("www/buttons.css"),
+    includeCSS("www/custom.css"),
     
 #----- Choose directory, read files ----- 
     tabItems(
@@ -128,6 +128,7 @@ e4ui <- function(){
                       
                       
                     ),
+                    
                     tabPanel(
                       title = tagList(icon("bar-chart"), "Plot"),
                       value = "plottab",
@@ -135,9 +136,44 @@ e4ui <- function(){
                       dygraphOutput("dygraph_current_data2", height = "140px"),
                       dygraphOutput("dygraph_current_data3", height = "140px"),
                       dygraphOutput("dygraph_current_data4", height = "140px")
-                      
+                    ),
+                    
+                    tabPanel(
+                      title = tagList(icon("list-ol"), "Annotations"),
+                      value = "plotannotations",
+                      actionButton("btn_panel_float", "Add floating annotation panel",
+                                   class = "btn btn-large", icon = icon("plus")),
+                      tags$br(),
+                      tags$h5("Annotations (selected time window)"),
+                      DTOutput("dt_annotations_visible")
                     )
 
+                  ),
+                  shinyjs::hidden(
+                    absolutePanel(
+                      id = "thispanel", # give the panel an id so we can close it easily
+                      
+                      # Add extra CSS.
+                      style = glue("background-color: white;",
+                                   "padding: 30px;",
+                                   "border: 1px solid black;",
+                                   "border-radius: 5px;",
+                                   "z-index: 10000;"),
+                      
+                      tags$h5("Annotations"),
+                      DT::dataTableOutput("dt_panel_annotations"),
+                      actionButton("btn_close_panel", "Close", 
+                                   icon = icon("remove"),
+                                   class = "btn btn-danger",
+                                   onclick=glue("document.getElementById('thispanel').style.display = 'none';")),
+                      
+                      top = 20, 
+                      left = 100, 
+                      
+                      width = 600,
+                      height = 500,
+                      draggable = TRUE
+                    )
                   )
                 )
               )

@@ -12,3 +12,16 @@ hide_tab <- function(value){
 show_tab <- function(value){
   shinyjs::show(selector = glue("li > a[data-value='{value}']")) 
 }
+
+
+
+disable_link <- function(name){
+  addCssClass(selector = glue("a[data-value='{name}']"), 
+              class = "inactivelink")
+}
+
+enable_link <- function(name){
+  removeCssClass(selector = glue("a[data-value='{name}']"), 
+                 class = "inactivelink")
+}
+
