@@ -2,7 +2,17 @@ Package: e4dashboard
 Type: Package
 Title: Shiny Application for E4 Data
 Version: 0.1.0
-Author: Peter
+Authors@R: c(person("Peter", "de Looff", role = c("aut", "cre"),
+                     email = "peterdelooff@gmail.com"),
+              person("Remko", "Duursma", role = "aut"),
+              person("Saskia", "Koldijk", role = "aut"),
+              person("Kees", "de Schepper", role = "aut"),
+              person("Sara", "Taylor", role = "ctb"))
+Author: Peter de Looff [aut, cre],
+  Remko Duursma [aut],
+  Saskia Koldijk [aut],
+  Kees de Schepper [aut],
+  Sara Taylor [ctb]
 Depends: R (>= 3.6.1), shiny, shinydashboard, shinyjs, shinyWidgets, e4tools, DT, RHRV, xts, glue, zip, dplyr, lubridate, dygraphs, readxl
 Maintainer: Peter <peterdelooff@gmail.com>
 Description: Shiny application to view and transform E4 data.
