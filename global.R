@@ -15,7 +15,9 @@ suppressPackageStartupMessages({
   library(glue)
   library(xts)
   library(RHRV)
-  library(varian)
+  library(rmarkdown)
+  library(kableExtra)
+  library(knitr)
 })
 
 

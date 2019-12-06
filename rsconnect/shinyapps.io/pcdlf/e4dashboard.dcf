@@ -1,0 +1,10 @@
+name: e4dashboard
+title:
+username:
+account: pcdlf
+server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
+appId: 1566292
+bundleId: 2643913
+url: https://pcdlf.shinyapps.io/e4dashboard/
+when: 1575558900.72166
