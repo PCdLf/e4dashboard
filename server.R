@@ -12,6 +12,7 @@ function(input, output, session) {
   #----- Setup -----
   rv <- reactiveValues(
     data = NULL, #readRDS("rvdata.rds"),
+    data_agg = NULL,
     zip_files = NULL,
     calendar = NULL, #readRDS("rvcalendar.rds"),
     timeseries = NULL,
@@ -57,25 +58,27 @@ function(input, output, session) {
       for(i in seq_along(fns)){
         
         incProgress(1/n, detail = fn_names[i])
-        data[[i]] <- read_e4(fns[i])
+        data[[i]] <- e4tools::read_e4(fns[i])
         
       }
       
       # If more than 1 zip file selected, row-bind them using our custom function
       incProgress(1/n, detail = "Row-binding")
       if(length(fns) > 1){
-        rv$data <- rbind_e4(data)
+        rv$data <- e4tools::rbind_e4(data)
       } else {
         rv$data <- data[[1]]
       }
       
+      rv$data_agg <- e4tools::aggregate_e4_data(rv$data)
+      
     })
     
     rv$timeseries <- list(
-      EDA = as_timeseries(rv$data$EDA, name_col = "EDA"),
-      HR = as_timeseries(rv$data$HR, name_col = "HR"),
-      TEMP = as_timeseries(rv$data$TEMP, name_col = "Temperature"),
-      MOVE = as_timeseries(rv$data$ACC, index = 5, name_col = "Movement")
+      EDA = e4tools::as_timeseries(rv$data_agg$EDA, name_col = "EDA"),
+      HR = e4tools::as_timeseries(rv$data_agg$HR, name_col = "HR"),
+      TEMP = e4tools::as_timeseries(rv$data_agg$TEMP, name_col = "Temperature"),
+      MOVE = e4tools::as_timeseries(rv$data_agg$ACC, index = 5, name_col = "Movement")
     )
     
     
@@ -204,7 +207,9 @@ function(input, output, session) {
     
     req(rv$timeseries)
     show_tab("plottab")
-    if(nrow(rv$calendar)){
+    
+    
+    if(isTRUE(nrow(rv$calendar))){
       show_tab("plotannotations")
     }
     
