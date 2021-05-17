@@ -37,3 +37,70 @@ calendarUI <- function(id){
   
   
 }
+
+
+
+calendarModule <- function(input, output, session){
+  
+  calendar_out <- reactiveVal()
+  
+  observeEvent(input$select_calendar_file, {
+    
+    dfr <- input$select_calendar_file
+    
+    calendar_out(
+      read_calendar(dfr$datapath)
+    )
+    
+    shinyjs::hide("calendar_in_block")
+    shinyjs::show("calendar_block")
+  })
+  
+  # Make sure to use DT:: to use the right renderDataTable (shiny has an old version)
+  output$dt_calendar <- DT::renderDataTable({
+    
+    req(calendar_out())
+    
+    calendar_out() %>%
+      mutate(Date = format(Date, "%Y-%m-%d"),
+             Start = format(Start, "%H:%M:%S"),
+             End = format(End, "%H:%M:%S")
+      ) %>% 
+      datatable()
+    
+  })
+  
+  
+return(calendar_out)
+}
+
+
+
+
+if(FALSE){
+  
+  
+  library(shiny)
+  
+  ui <- fluidPage(
+    useShinyjs(),
+    calendarUI("cal"),
+    tags$hr(),
+    verbatimTextOutput("txt_out")
+    
+  )
+  
+  server <- function(input, output, session) {
+    
+    cal <- callModule(calendarModule, "cal")
+    
+    output$txt_out <- renderPrint({
+      str(cal())
+    })
+  }
+  
+  shinyApp(ui, server)
+  
+  
+}
+

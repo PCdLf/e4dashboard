@@ -35,3 +35,125 @@ dataUploadUI <- function(id){
   )
   
 }
+
+
+dataUploadModule <- function(input, output, session){
+  
+  rv <- reactiveValues(
+    zip_files = NULL,
+    data = NULL,
+    timeseries = NULL,
+    data_agg = NULL
+  )
+  
+  observeEvent(input$select_zip_files, {
+    
+    rv$zip_files <- input$select_zip_files
+    
+    # Display the picker, after the choices are updated.
+    shinyjs::show("btn_read_data")
+    shinyjs::show("btn_reset")
+  })
+  
+  output$msg_files_selected <- renderUI({
+    
+    req(rv$zip_files)
+    n <- nrow(rv$zip_files)
+    if(n > 0){
+      tags$p(glue("You have selected {n} ZIP files."))
+    }
+    
+  })
+  
+  
+  observeEvent(input$btn_read_data, {
+    
+    # Read selected ZIP files
+    fns <- rv$zip_files$datapath
+    fn_names <- rv$zip_files$name
+    
+    # Read data into a list (Each element of the list contents from 1 zip file)
+    data <- list()
+    n <- length(fns) + 1
+    withProgress(message = "Reading data...", value = 0, {
+      
+      for(i in seq_along(fns)){
+        
+        incProgress(1/n, detail = fn_names[i])
+        data[[i]] <- e4tools::read_e4(fns[i])
+        
+      }
+      
+      # If more than 1 zip file selected, row-bind them using our custom function
+      incProgress(1/n, detail = "Row-binding")
+      if(length(fns) > 1){
+        rv$data <- e4tools::rbind_e4(data)
+      } else {
+        rv$data <- data[[1]]
+      }
+      
+      rv$data_agg <- e4tools::aggregate_e4_data(rv$data)
+      
+    })
+    
+    rv$timeseries <- list(
+      EDA = e4tools::as_timeseries(rv$data_agg$EDA, name_col = "EDA"),
+      HR = e4tools::as_timeseries(rv$data_agg$HR, name_col = "HR"),
+      TEMP = e4tools::as_timeseries(rv$data_agg$TEMP, name_col = "Temperature"),
+      MOVE = e4tools::as_timeseries(rv$data_agg$ACC, index = 5, name_col = "Movement")
+    )
+    
+    
+    # Message: data read!
+    output$msg_data_read <- renderUI({
+      tags$p("Data read successfully!", style = "color: blue;")
+    })
+    
+    
+  })
+  
+  
+  out <- reactive({
+    
+    list(
+      data = rv$data,
+      data_agg = rv$data_agg,
+      timeseries = rv$timeseries
+    )
+    
+  })
+
+
+return(out)
+}
+
+
+if(FALSE){
+  
+  
+  library(shiny)
+  
+  ui <- fluidPage(
+    useShinyjs(),
+    
+    dataUploadUI("test"),
+    tags$hr(),
+    verbatimTextOutput("txt_out")
+  )
+  
+  server <- function(input, output, session) {
+    
+    out <- callModule(dataUploadModule, "test")
+    
+    output$txt_out <- renderPrint({
+      str(out())
+    })
+    
+  }
+  
+  shinyApp(ui, server)
+  
+  
+  
+}
+

@@ -30,13 +30,164 @@ analysisModuleUI <- function(id){
                             numericInput(ns("time_second_end"), "Seconds", value = 0, width = 200)
                           ),tags$br(),
                           
-                          actionButton(ns("btn_do_analysis"), "Run analysis"),
+                          actionButton(ns("btn_do_analysis"), "Run analysis", class = "btn-success", 
+                                       icon = icon("calculator")),
                           tags$hr(),
                           dataTableOutput(ns("dt_analysis_output")),
-                          actionButton(ns("btn_download_analysis"), "Download")
+                          shinyjs::hidden(
+                            actionButton(ns("btn_download_analysis"), "Download")  
+                          )
+                          
                           
       )
     )
   )
   
 }
+
+
+
+
+analysisModule <- function(input, output, session, data = reactive(NULL)){
+  
+  
+  # Fill analysis times
+  observe({
+    
+    data <- data()$data
+    
+    req(nrow(data$EDA) >0)
+
+    tms <- range(data$EDA$DateTime)
+    updateDateInput(session, "date_analysis_start",
+                    value = min(as.Date(tms)),
+                    min = min(as.Date(tms)),
+                    max = max(as.Date(tms))
+    )
+    updateDateInput(session, "date_analysis_end",
+                    value = max(as.Date(tms)),
+                    min = min(as.Date(tms)),
+                    max = max(as.Date(tms))
+    )
+    
+    updateNumericInput(session, "time_hour_start",
+                       value = hour(min(tms)), min = 0, max = 23)
+    updateNumericInput(session, "time_hour_end",
+                       value = hour(max(tms)), min = 0, max = 23)
+    
+    updateNumericInput(session, "time_minute_start",
+                       value = minute(min(tms)), min = 0, max = 59)
+    updateNumericInput(session, "time_minute_end",
+                       value = minute(max(tms)), min = 0, max = 59)
+    
+    updateNumericInput(session, "time_second_start",
+                       value = second(min(tms)), min = 0, max = 59)
+    updateNumericInput(session, "time_second_end",
+                       value = second(max(tms)), min = 0, max = 59)
+    
+    
+  })
+  
+  
+  last_analysis <- reactiveVal()
+  
+  observeEvent(input$btn_do_analysis, {
+    
+    
+    start <- ISOdatetime(
+      year = year(input$date_analysis_start),
+      month = month(input$date_analysis_start),
+      day = day(input$date_analysis_start),
+      hour = input$time_hour_start,
+      min = input$time_minute_start,
+      sec = input$time_second_start,
+      tz = "UTC"
+    )
+    
+    end <- ISOdatetime(
+      year = year(input$date_analysis_end),
+      month = month(input$date_analysis_end),
+      day = day(input$date_analysis_end),
+      hour = input$time_hour_end,
+      min = input$time_minute_end,
+      sec = input$time_second_end,
+      tz = "UTC"
+    )
+    
+    data <- data()$data
+    
+    data$IBI$datetime <- lubridate::force_tz(data$IBI$DateTime, "UTC")
+    data$EDA$datetime <- lubridate::force_tz(data$EDA$DateTime, "UTC")
+    data$ACC$datetime <- lubridate::force_tz(data$ACC$DateTime, "UTC")
+    data$TEMP$datetime <- lubridate::force_tz(data$TEMP$DateTime, "UTC")
+    data$HR$datetime <- lubridate::force_tz(data$HR$DateTime, "UTC")
+    
+    data$IBI <- filter(data$IBI, 
+                       datetime >= start,
+                       datetime <= end)
+    data$EDA <- filter(data$EDA, 
+                       datetime >= start,
+                       datetime <= end)
+    data$ACC <- filter(data$ACC, 
+                       datetime >= start,
+                       datetime <= end)
+    data$TEMP <- filter(data$TEMP, 
+                        datetime >= start,
+                        datetime <= end)
+    data$HR <- filter(data$HR, 
+                      datetime >= start,
+                      datetime <= end)
+    
+    last_analysis(
+      calculate_heartrate_params(data$IBI, data$EDA)
+    )
+
+  })
+
+  observe({
+    
+    last_analysis <- last_analysis()
+    req(last_analysis)
+    shinyjs::show("btn_download_analysis")
+    
+  })
+  
+  output$dt_analysis_output <- DT::renderDT({
+    
+    last_analysis <- last_analysis()
+    req(last_analysis)
+    
+    # !! formatting
+    datatable(t(as.data.frame(last_analysis)))
+    
+  })  
+  
+  
+}
+
+
+
+
+if(FALSE){
+  
+  
+  library(shiny)
+  
+  ui <- fluidPage(
+    
+    dataUploadUI("test"),
+    tags$hr(),
+    analysisModuleUI("analysis")
+  )
+  
+  server <- function(input, output, session) {
+    
+    data <- callModule(dataUploadModule, "test")
+    
+    callModule(analysisModule, "analysis", data = data)
+  }
+  
+  shinyApp(ui, server)
+  
+}
+
