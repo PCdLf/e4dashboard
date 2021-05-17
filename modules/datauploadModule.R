@@ -81,6 +81,11 @@ dataUploadModule <- function(input, output, session){
     output$msg_data_read <- renderUI({
       tags$p("Data read successfully!", style = "color: blue;")
     })
+
+    enable_link("tabCalendar")
+    enable_link("tabVisualization")
+    enable_link("tabAnalysis")
+
     
   })
   

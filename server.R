@@ -1,4 +1,8 @@
 function(input, output, session) {
+  disable_link("tabCalendar")
+  disable_link("tabVisualization")
+  disable_link("tabAnalysis")
+  disable_link("tabReport")
   
   
   data_in <- callModule(dataUploadModule, "data")
@@ -10,13 +14,7 @@ function(input, output, session) {
   
   callModule(analysisModule, "analysis", data = data_in)
   
-  
-  # 
-  # 
-  # enable_link("tabCalendar")
-  # enable_link("tabVisualization")
-  # enable_link("tabAnalysis")
-  # 
+
   
 
   
