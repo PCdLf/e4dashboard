@@ -24,7 +24,8 @@ e4_timeseries_plot <- function(data,
                          average_line = FALSE,
                          events = calendar_data,
                          events_label = FALSE,
-                         yaxis_range = NULL){
+                         yaxis_range = NULL
+                         ){
     
     begin_time <- min(index(ts)) - 30*60
     

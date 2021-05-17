@@ -27,7 +27,7 @@ visualizationModuleUI <- function(id){
                           numericRangeInput(ns("slide_yaxis_eda"), "EDA Y-axis range", value = c(0,20)),
                           numericRangeInput(ns("slide_yaxis_hr"),  "HR Y-axis range", value = c(40, 160)),
                           numericRangeInput(ns("slide_yaxis_temp"),"TEMP Y-axis range", value = c(24, 38)),
-                          numericRangeInput(ns("slide_yaxis_move"),"MOVE Y-axis range", value = c(62, 66))
+                          numericRangeInput(ns("slide_yaxis_move"),"MOVE Y-axis range", value = c(0.98, 1.25))
                    )
                  ),
                  fluidRow(
@@ -98,7 +98,6 @@ visualizationModule <- function(input, output, session,
       annotatedata <- NULL
     }
     
-    browser()
     plots <- e4_timeseries_plot(data$timeseries,
                                 main_title = input$txt_plot_main_title,
                                 calendar_data = annotatedata,

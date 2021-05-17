@@ -14,10 +14,6 @@ function(input, output, session) {
   
   callModule(analysisModule, "analysis", data = data_in)
   
-
-  
-
-  
 }
 
 

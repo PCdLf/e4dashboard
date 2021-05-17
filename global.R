@@ -1,4 +1,6 @@
 
+
+
 source("preload/load_packages.R")
 
 
@@ -15,3 +17,4 @@ source("modules/reportModule.R")
 source("modules/visualizationModule.R")
 
 
+options(shiny.maxRequestSize = 30*1024^2)

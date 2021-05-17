@@ -43,7 +43,7 @@ calculate_heartrate_params <- function(ibi, eda){
   hrv_data <- SetVerbose(hrv_data, TRUE)
   
   #Create vector with summary of the time between beats
-  hr_beats_diff <- summary(diff(ibi[[3]], lag = 1))
+  hr_beats_diff <- summary(diff(ibi$seconds, lag = 1))
   names(hr_beats_diff) <- c("beats_min_diff",
                             "beats_q1_diff",
                             "beats_mdn_diff",
@@ -52,11 +52,11 @@ calculate_heartrate_params <- function(ibi, eda){
                             "beats_max_diff")
   
   #Create a fraction index for the amount of beats detected relative to session duration 
-  ses_dur_sec <- length(eda$V1)/4
-  hrv_art_index <- length(ibi[[2]])/(length(eda$V1)/4)
+  ses_dur_sec <- length(eda$EDA)/4
+  hrv_art_index <- length(ibi$IBI)/(length(eda$EDA)/4)
   
   #Create a file for HRV analysis by mimicking an artefact free file 
-  hrv_data <- LoadBeatVector(hrv_data, cumsum(ibi[[2]]), scale = 1)
+  hrv_data <- LoadBeatVector(hrv_data, cumsum(ibi$IBI), scale = 1)
   
   #plot(hrv_data$Beat$Time)                                #Plot raw beats
   hrv_data <- BuildNIHR(hrv_data)                          #Build non-interpolated data
