@@ -32,6 +32,7 @@ e4_timeseries_plot <- function(data,
       dyHighlight(highlightCircleSize = 5) %>%
       dyOptions(drawPoints = FALSE, 
                 drawXAxis = draw_x_axis,
+                connectSeparatedPoints = TRUE,
                 colors = color)
       # dyAxis(name = "x", valueRange = c(begin_time, NULL))
     
@@ -109,23 +110,5 @@ e4_timeseries_plot <- function(data,
 }
 
 
-#' read_calendar
-#' @description Read in calendar if one is provided in the folder.
-#' @param  fn ..
-#' @export
-
-
-read_calendar <- function(fn){
-  
-  rectify_datetime <- function(date, time){
-    ISOdatetime(year(date), month(date), day(date), 
-                hour(time), minute(time), second(time))  
-  }
-  
-  read_excel(fn) %>%
-    mutate(Start = rectify_datetime(Date, Start),
-           End = rectify_datetime(Date, End))
-  
-}
 
 

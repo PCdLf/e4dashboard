@@ -1,5 +1,28 @@
 
 
+read_calendar <- function(fn){
+  
+  ext <- tolower(tools::file_ext(fn))
+  
+  rectify_datetime <- function(date, time){
+    ISOdatetime(year(date), month(date), day(date), 
+                hour(time), minute(time), second(time))  
+  }
+  
+ switch(ext,
+       xls = read_excel(fn),
+       xlsx = read_excel(fn),
+       txt = read.csv2(fn)
+       ) %>% 
+    as_tibble() %>%
+    mutate(Date = as.Date(Date),  ## ????
+           Start = rectify_datetime(Date, Start),
+           End = rectify_datetime(Date, End))
+  
+}
+
+
+
 
 calendarUI <- function(id){
   
@@ -15,9 +38,9 @@ calendarUI <- function(id){
                                    tags$p("Please consult the documentation for the format of the calendar."),
                                    
                                    fileInput(ns("select_calendar_file"),
-                                             label = "Choose Calendar (XLS/XLSX) file", 
+                                             label = "Choose Calendar (XLS/XLSX/TXT) file", 
                                              multiple = FALSE, 
-                                             accept = c(".xls",".xlsx"),
+                                             accept = c(".xls",".xlsx", ".txt"),
                                              buttonLabel = "Browse...")
                           ),
                           

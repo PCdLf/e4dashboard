@@ -52,8 +52,6 @@ visualizationModuleUI <- function(id){
              tabPanel(
                title = tagList(icon("list-ol"), "Annotations"),
                value = "plotannotations",
-               actionButton(ns("btn_panel_float"), "Add floating annotation panel",
-                            class = "btn btn-large", icon = icon("plus")),
                tags$br(),
                tags$h5("Annotations (selected time window)"),
                DTOutput(ns("dt_annotations_visible"))
@@ -100,6 +98,7 @@ visualizationModule <- function(input, output, session,
       annotatedata <- NULL
     }
     
+    browser()
     plots <- e4_timeseries_plot(data$timeseries,
                                 main_title = input$txt_plot_main_title,
                                 calendar_data = annotatedata,

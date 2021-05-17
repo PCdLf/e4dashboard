@@ -116,27 +116,7 @@ analysisModule <- function(input, output, session, data = reactive(NULL)){
     
     data <- data()$data
     
-    data$IBI$datetime <- lubridate::force_tz(data$IBI$DateTime, "UTC")
-    data$EDA$datetime <- lubridate::force_tz(data$EDA$DateTime, "UTC")
-    data$ACC$datetime <- lubridate::force_tz(data$ACC$DateTime, "UTC")
-    data$TEMP$datetime <- lubridate::force_tz(data$TEMP$DateTime, "UTC")
-    data$HR$datetime <- lubridate::force_tz(data$HR$DateTime, "UTC")
-    
-    data$IBI <- filter(data$IBI, 
-                       datetime >= start,
-                       datetime <= end)
-    data$EDA <- filter(data$EDA, 
-                       datetime >= start,
-                       datetime <= end)
-    data$ACC <- filter(data$ACC, 
-                       datetime >= start,
-                       datetime <= end)
-    data$TEMP <- filter(data$TEMP, 
-                        datetime >= start,
-                        datetime <= end)
-    data$HR <- filter(data$HR, 
-                      datetime >= start,
-                      datetime <= end)
+    data <- filter_e4data_datetime(data)
     
     last_analysis(
       calculate_heartrate_params(data$IBI, data$EDA)
