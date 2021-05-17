@@ -19,15 +19,6 @@ dataUploadUI <- function(id){
         
         uiOutput(ns("msg_files_selected")),
         tags$br(),
-        tags$br(),
-        
-        shinyjs::hidden(
-          actionButton(ns("btn_read_data"), "Read data", icon = icon("chart-line"),
-                       class = "btn btn-success")
-        ),
-        shinyjs::hidden(
-          actionButton(ns("btn_reset"), "Start over", icon = icon("refresh"))
-        ),
         htmlOutput(ns("msg_data_read"))
       )
     )
@@ -49,24 +40,6 @@ dataUploadModule <- function(input, output, session){
   observeEvent(input$select_zip_files, {
     
     rv$zip_files <- input$select_zip_files
-    
-    # Display the picker, after the choices are updated.
-    shinyjs::show("btn_read_data")
-    shinyjs::show("btn_reset")
-  })
-  
-  output$msg_files_selected <- renderUI({
-    
-    req(rv$zip_files)
-    n <- nrow(rv$zip_files)
-    if(n > 0){
-      tags$p(glue("You have selected {n} ZIP files."))
-    }
-    
-  })
-  
-  
-  observeEvent(input$btn_read_data, {
     
     # Read selected ZIP files
     fns <- rv$zip_files$datapath
@@ -109,6 +82,15 @@ dataUploadModule <- function(input, output, session){
       tags$p("Data read successfully!", style = "color: blue;")
     })
     
+  })
+  
+  output$msg_files_selected <- renderUI({
+    
+    req(rv$zip_files)
+    n <- nrow(rv$zip_files)
+    if(n > 0){
+      tags$p(glue("You have selected {n} ZIP files."))
+    }
     
   })
   
