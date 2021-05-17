@@ -1,28 +1,17 @@
 
-suppressPackageStartupMessages({
-  library(e4tools)
-  library(shiny) 
-  library(shinydashboard)
-  library(zip)
-  library(dplyr)
-  library(lubridate)
-  library(dygraphs)
-  library(shinyjs)
-  library(shinyWidgets)
-  library(shinycssloaders)
-  library(readxl)
-  library(DT)
-  library(glue)
-  library(xts)
-  library(RHRV)
-  library(rmarkdown)
-  library(kableExtra)
-  library(knitr)
-})
+source("preload/load_packages.R")
 
 
 source("R/functions.R")
 source("R/dygraph_functions.R")
 
 source("R/heartrate.R")
+
+
+source("modules/analysisModule.R")
+source("modules/calendarModule.R")
+source("modules/datauploadModule.R")
+source("modules/reportModule.R")
+source("modules/visualizationModule.R")
+
 
