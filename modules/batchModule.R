@@ -73,11 +73,11 @@ batchModule <- function(input, output, session){
   })
   
   output$ui_folder_in <- renderUI({
-    paste("Selected:", folder_in())
+    tags$p(folder_in())
   })
   
   output$ui_folder_out <- renderUI({
-    paste("Selected:", folder_out())
+    tags$p(folder_out())
   })
   
   observe({

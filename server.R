@@ -4,11 +4,10 @@ function(input, output, session) {
   disable_link("tabAnalysis")
   disable_link("tabReport")
 
-  
+
   data_in <- callModule(dataUploadModule, "data")
   
   calendar <- callModule(calendarModule, "calendar")
-  
   
   # data_in <- reactive({
   #   readRDS("data.rds")
@@ -16,10 +15,12 @@ function(input, output, session) {
   
   callModule(visualizationModule, "viz", data = data_in, calendar = calendar)
   
-  callModule(analysisModule, "analysis", data = data_in)
+  analysis <- callModule(analysisModule, "analysis", data = data_in)
  
-  
   callModule(batchModule, "batch") 
+  
+  callModule(reportModule, "report", analysis = analysis, calendar = calendar)
+  
 }
 
 

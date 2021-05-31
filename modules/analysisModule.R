@@ -121,8 +121,16 @@ analysisModule <- function(input, output, session, data = reactive(NULL)){
     
     data <- filter_e4data_datetime(data, start, end)
     
+    ibi_analysis <-  e4tools::ibi_analysis(data$IBI)
+    
+    eda_filt <- e4tools::process_eda(data$EDA)
+    eda_feat <- compute_features2(eda_filt)
+    
     last_analysis(
-      ibi_analysis(data$IBI)
+      list(
+        ibi = ibi_analysis,
+        eda = eda_feat
+      )
     )
 
   })
@@ -132,6 +140,7 @@ analysisModule <- function(input, output, session, data = reactive(NULL)){
     last_analysis <- last_analysis()
     req(last_analysis)
     shinyjs::show("btn_download_analysis")
+    enable_link("tabReport")
     
   })
 
@@ -140,6 +149,7 @@ analysisModule <- function(input, output, session, data = reactive(NULL)){
   })
   
   
+return(last_analysis)
 }
 
 

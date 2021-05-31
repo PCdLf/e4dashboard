@@ -14,184 +14,6 @@ library(kableExtra)
 knitr::opts_chunk$set(echo = FALSE)
 ```
   
-```{r}
-#' e4_timeseries_plot
-#' @description Creates 4 graphs of the E4 data.
-#' @param data List of e4 data.
-#' @param main_title Main title of the plot, defaults to empty string.
-#' @param calendar_data Name to give to the timeseries data.
-#' @param average_lines Do you want to add averages to the plot
-#' @param yaxis_ranges What Range do you want to give the y axis?
-#' @param colours The colours of the graph, defaults to blue, orange, red, green
-#' @export
-
-e4_timeseries_plot <- function(data, 
-                               main_title = "",
-                               calendar_data = NULL,
-                               average_lines = "",
-                               yaxis_ranges = NULL,
-                               colours = c("#1874CD", "#FF7F00", "#458B00", "#68228B")){
-  
-  
-  my_dygraph <- function(ts, 
-                         main_title = FALSE, 
-                         ylab_title = FALSE, 
-                         draw_x_axis = FALSE, 
-                         color = "black",
-                         average_line = FALSE,
-                         events = calendar_data,
-                         events_label = FALSE,
-                         yaxis_range = NULL){
-    
-    begin_time <- min(index(ts)) - 30*60
-    
-    out <- dygraph(ts, main = main_title, group = "plot2", ylab = ylab_title, height = 150, width = 900) %>%   
-      dyHighlight(highlightCircleSize = 5) %>%
-      dyOptions(drawPoints = FALSE, 
-                drawXAxis = draw_x_axis,
-                colors = color)
-      # dyAxis(name = "x", valueRange = c(begin_time, NULL))
-    
-    if(average_line){
-      
-      out <- out %>%
-        dyLimit(mean(ts, na.rm = TRUE), "Mean",
-                strokePattern = "solid", color = "blue")
-      
-    }
-    
-    if(!is.null(yaxis_range)){
-      out <- out %>%
-        dyAxis("y", valueRange = yaxis_range)
-    }
-    
-    
-    if(!is.null(events)){
-      
-      # 'Start' events
-      for(i in 1:nrow(events)){
-        
-        txt <- ifelse(events_label, events$Tekst[i], "")
-        
-        out <- out %>%
-          dyEvent(events$Start[i], txt, labelLoc="bottom")
-        
-      }
-      
-      
-      # Shading events
-      eventsub <- filter(events, !is.na(Start) & !is.na(End))
-      if(nrow(eventsub)){
-        for(i in 1:nrow(eventsub)){
-          
-          out <- out %>%
-            dyShading(from = eventsub$Start[i],
-                      to = eventsub$End[i],
-                      color = "rgba(220,220,220,0.4)")
-          
-        }
-      }
-      
-    }
-    
-  return(out)
-  }
-  
-  list(
-    my_dygraph(data$EDA, 
-               main_title = main_title, 
-               ylab_title = "EDA", 
-               events_label = TRUE,
-               average_line = "EDA" %in% average_lines,
-               yaxis_range = yaxis_ranges$EDA,
-               color = colours[1]),
-    my_dygraph(data$HR, 
-               ylab_title = "HR", 
-               average_line = "HR" %in% average_lines,
-               yaxis_range = yaxis_ranges$HR,
-               color = colours[2]),
-    my_dygraph(data$TEMP, 
-               ylab_title = "Temperature", 
-               average_line = "TEMP" %in% average_lines,
-               yaxis_range = yaxis_ranges$TEMP,
-               color = colours[3]),
-    my_dygraph(data$MOVE, 
-               draw_x_axis = TRUE, 
-               ylab_title = "Movement", 
-               average_line = "MOVE" %in% average_lines,
-               yaxis_range = yaxis_ranges$MOVE,
-               color = colours[4]) %>%
-    dyRangeSelector()
-  )
-}
-
-
-#' read_calendar
-#' @description Read in calendar if one is provided in the folder.
-#' @param  fn ..
-#' @export
-
-
-read_calendar <- function(fn){
-  
-  rectify_datetime <- function(date, time){
-    ISOdatetime(year(date), month(date), day(date), 
-                hour(time), minute(time), second(time))  
-  }
-  
-  read_excel(fn) %>%
-    mutate(Start = rectify_datetime(Date, Start),
-           End = rectify_datetime(Date, End))
-  
-}
-
-
-
-```
-  
-  
-```{r eval=FALSE}
-# For debugging only!
-data <- readRDS("rvdata.rds")
-calendar <- readRDS("rvcalendar.rds")
-analysis <- readRDS("rvlast_analysis.rds")
-```
-  
-  
-```{r eval=TRUE}
-data <- rv$data
-calendar <- rv$calendar
-analysis <- rv$last_analysis
-```
-
-```{r eval=TRUE}
-timeseries <- list(
-      EDA = as_timeseries(data$EDA, name_col = "EDA"),
-      HR = as_timeseries(data$HR, name_col = "HR"),
-      TEMP = as_timeseries(data$TEMP, name_col = "Temperature"),
-      MOVE = as_timeseries(data$ACC, index = 5, name_col = "Movement")
-    )
-```
-
-
-
-# Visualization
-
-```{r eval=TRUE}
-plots <- e4_timeseries_plot(timeseries,
-                            main_title = "Plot",
-                            calendar_data = calendar,
-                            average_lines =  "",
-                            yaxis_ranges =  NULL
-                            )
-
-plots[[1]]
-plots[[2]]
-plots[[3]]
-plots[[4]]
-
-```
-
 # Calendar events
 
 ```{r eval=TRUE}
@@ -204,9 +26,12 @@ kable(calendar, format = "html") %>%
 
 # Analysis output
 
+
+## IBI Time analysis
 ```{r eval=TRUE}
 
-kable(t(as.data.frame(analysis)), format = "html") %>%
+  as.data.frame(analysis$ibi$time_analysis) %>%
+  kable(format = "html") %>%
   kable_styling()
 
 ```
