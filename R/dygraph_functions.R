@@ -34,7 +34,8 @@ e4_timeseries_plot <- function(data,
       dyOptions(drawPoints = FALSE, 
                 drawXAxis = draw_x_axis,
                 connectSeparatedPoints = TRUE,
-                colors = color)
+                colors = color) %>%
+      dyUnzoom()
       # dyAxis(name = "x", valueRange = c(begin_time, NULL))
     
     if(average_line){
