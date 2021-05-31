@@ -18,3 +18,25 @@ reportModuleUI <- function(id){
   
 }
 
+
+reportModule <- function(input, output, session){
+  
+  
+  # See https://shiny.rstudio.com/articles/generating-reports.html
+  output$btn_download_report <- downloadHandler(
+    
+    filename = "e4_analysis.html",
+    content = function(file){
+      
+      tempReport <- file.path(tempdir(), "report.Rmd")
+      file.copy("www/report.Rmd", tempReport, overwrite = TRUE)
+      
+      rmarkdown::render(tempReport, output_file = file)
+      
+    }
+    
+  )
+  
+  
+}
+
