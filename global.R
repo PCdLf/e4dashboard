@@ -3,7 +3,7 @@
 
 source("preload/load_packages.R")
 
-if(packageVersion("e4tools") < "0.5"){
+if(packageVersion("e4tools") < "0.6"){
   stop("Please update e4tools!")
 }
 

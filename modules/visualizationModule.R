@@ -47,8 +47,7 @@ visualizationModuleUI <- function(id){
                           tags$hr(),
                           
                           tags$h4("MOVE"),
-                          visSeriesOptionsUI(ns("move"), y_range = .cc$visualisation$move$yrange),
-                          tags$hr()
+                          visSeriesOptionsUI(ns("move"), y_range = .cc$visualisation$move$yrange)
                           
                    )
                  )

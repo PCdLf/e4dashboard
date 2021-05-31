@@ -12,7 +12,16 @@ batchModuleUI <- function(id){
         title = "Batch Analysis",
         
         
-       actionButton(ns("btn1"), "BUTTON")
+       actionButton(ns("btn_select_folder"), "Select input folder", 
+                    icon = icon("folder-open"), class = "btn-light"),
+       
+       tags$br(),
+       uiOutput(ns("ui_n_files_found")),
+       shinyjs::hidden(
+         actionButton(ns("btn_run_batch"), "Run batch analysis", icon = icon("check"), class = "btn-success")
+       )
+       
+       
         
         
       ),
@@ -34,16 +43,37 @@ choose_directory <- function(caption = 'Select data directory') {
 
 batchModule <- function(input, output, session){
   
-  out <- reactiveVal()
   
-  observeEvent(input$btn1, {
-    out(
+  folder_in <- reactiveVal()
+  
+  observeEvent(input$btn_select_folder, {
+    folder_in(
       choose_directory()
     )
+    
+    shinyjs::show("btn_run_batch")
   })
   
-  output$txt_out <- renderPrint(out())
+  n_zip_files <- reactive({
+    req(folder_in())
+    length(list.files(folder_in(), pattern = "[.]zip$", recursive = TRUE, full.names = TRUE))
+  })
   
+  output$ui_n_files_found <- renderUI({
+    
+    req(n_zip_files())
+    
+    paste(n_zip_files(), "ZIP files found in the selected folder, continue?")
+  })
+  
+
+  observeEvent(input$btn_run_batch, {
+    
+    toastr_info("Batch analysis started, this can take a while!")
+    e4tools::batch_analysis(folder_in())
+    toastr_info("Batch analysis completed!")
+    
+  })
   
 }
 
