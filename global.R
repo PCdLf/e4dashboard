@@ -31,5 +31,6 @@ source("modules/datauploadModule.R")
 source("modules/reportModule.R")
 source("modules/visualizationModule.R")
 source("modules/visSeriesOptionsModule.R")
+source("modules/batchModule.R")
 
 

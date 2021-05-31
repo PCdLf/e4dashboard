@@ -17,7 +17,9 @@ function(input, output, session) {
   callModule(visualizationModule, "viz", data = data_in, calendar = calendar)
   
   callModule(analysisModule, "analysis", data = data_in)
+ 
   
+  callModule(batchModule, "batch") 
 }
 
 
