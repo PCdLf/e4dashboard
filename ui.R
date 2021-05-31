@@ -4,7 +4,6 @@ function(){
   # dashboardPagePlus
   
   sidebar <- dashboardSidebar(
-
     sidebarMenu(
       id = "sidebar",
       menuItem("Data", tabName = "tabData", icon = icon("home")),
@@ -12,13 +11,13 @@ function(){
       menuItem("Visualization", tabName = "tabVisualization", icon = icon("chart-bar")),
       menuItem("Analysis", tabName = "tabAnalysis", icon = icon("chart-line")),
       menuItem("Report", tabName = "tabReport", icon = icon("file-alt"))
-      #actionButton("browse","browser()")
-    )
 
+    )
   )
 
   body <- dashboardBody(
     shinyjs::useShinyjs(),
+    shinytoastr::useToastr(),
     includeCSS("www/custom.css"),
     
 #----- Choose directory, read files ----- 

@@ -78,8 +78,11 @@ dataUploadModule <- function(input, output, session){
     
     
     # Message: data read!
+    toastr_success("Data read successfully.")
+    
     output$msg_data_read <- renderUI({
-      tags$p("Data read successfully!", style = "color: blue;")
+      tags$p("Data read successfully. To read a new dataset, upload a new Zip file.", 
+             style = "color: blue;")
     })
 
     enable_link("tabCalendar")

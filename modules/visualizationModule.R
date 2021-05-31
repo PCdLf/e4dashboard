@@ -20,7 +20,14 @@ visualizationModuleUI <- function(id){
                           tags$label(class = "control-label", "Annotations"),
                           checkboxInput(ns("check_add_calendar_annotation"), 
                                         label = "Calendar events",
-                                        value = TRUE)
+                                        value = TRUE),
+                          
+                          
+                          tags$br(),
+                          tags$hr(),
+                          actionButton(ns("btn_make_plot"), 
+                                       "Make plot", icon = icon("check"), 
+                                       class = "btn-success btn-lg")  
                           
                           # other plot options?
                             
@@ -44,11 +51,10 @@ visualizationModuleUI <- function(id){
                           tags$hr()
                           
                    )
-                 ),
-                 fluidRow(
-                   actionButton(ns("btn_make_plot"), 
-                                "Make plot", icon = icon("check"), class = "btn-success")  
                  )
+                 
+                   
+                 
                )
                
              ),
@@ -137,6 +143,7 @@ visualizationModule <- function(input, output, session,
     
     
     # 
+    toastr_success("Plot constructed, click on the 'Plot' tab!")
     updateActionButton(session, "btn_make_plot", label = "Update plot", icon = icon("refresh"))
     
   })
