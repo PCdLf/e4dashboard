@@ -69,6 +69,10 @@ visualizationModuleUI <- function(id){
 visualizationModule <- function(input, output, session, 
                                 data = reactive(NULL), calendar = reactive(NULL)){
   
+  
+  hide_tab("plottab")
+  hide_tab("plotannotations")
+  
   yaxis_ranges <- reactive(
     list(
       EDA = input$slide_yaxis_eda,
@@ -83,14 +87,14 @@ visualizationModule <- function(input, output, session,
     data <- data()
     
     req(data$timeseries)
+
+    show_tab("plottab")
+
+    if(isTRUE(nrow(calendar()))){
+      show_tab("plotannotations")
+    }
     
-    #show_tab("plottab")
-    
-    # if(isTRUE(nrow(calendar()))){
-    #   show_tab("plotannotations")
-    # }
-    
-    #updateTabsetPanel(session, "plottabbox", selected = "plottab")
+    updateTabsetPanel(session, "plottabbox", selected = "plottab")
     
     if(input$check_add_calendar_annotation){
       annotatedata <- calendar()

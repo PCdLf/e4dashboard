@@ -116,7 +116,7 @@ analysisModule <- function(input, output, session, data = reactive(NULL)){
     
     data <- data()$data
     
-    data <- filter_e4data_datetime(data)
+    data <- filter_e4data_datetime(data, start, end)
     
     last_analysis(
       calculate_heartrate_params(data$IBI, data$EDA)
