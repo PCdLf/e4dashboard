@@ -11,8 +11,7 @@
 e4_timeseries_plot <- function(data, 
                                main_title = "",
                                calendar_data = NULL,
-                               average_lines = "",
-                               yaxis_ranges = NULL,
+                               series_options = NULL,
                                colours = c("#1874CD", "#FF7F00", "#458B00", "#68228B")){
   
   
@@ -21,12 +20,14 @@ e4_timeseries_plot <- function(data,
                          ylab_title = FALSE, 
                          draw_x_axis = FALSE, 
                          color = "black",
-                         average_line = FALSE,
+                         y_line_type = NULL,
+                         y_line_val = 0,
                          events = calendar_data,
                          events_label = FALSE,
                          yaxis_range = NULL
                          ){
     
+
     begin_time <- min(index(ts)) - 30*60
     
     out <- dygraph(ts, main = main_title, group = "plot2", ylab = ylab_title, height = 150, width = 900) %>%   
@@ -38,11 +39,18 @@ e4_timeseries_plot <- function(data,
       dyUnzoom()
       # dyAxis(name = "x", valueRange = c(begin_time, NULL))
     
-    if(average_line){
+    
+    if(!is.null(y_line_type)){
+      
+      if(y_line_type == "mean"){
+        y_line_val <- mean(ts, na.rm = TRUE) 
+        label <- "Mean"
+      } else {
+        label <- NULL
+      }
       
       out <- out %>%
-        dyLimit(mean(ts, na.rm = TRUE), "Mean",
-                strokePattern = "solid", color = "blue")
+        dyLimit(y_line_val, label, strokePattern = "dashed", color = color)
       
     }
     
@@ -88,24 +96,28 @@ e4_timeseries_plot <- function(data,
                main_title = main_title, 
                ylab_title = "EDA", 
                events_label = TRUE,
-               average_line = "EDA" %in% average_lines,
-               yaxis_range = yaxis_ranges$EDA,
+               y_line_type = series_options$EDA$line_type,
+               y_line_val = series_options$EDA$custom_y_val,
+               yaxis_range = series_options$EDA$yaxis_range,
                color = colours[1]),
     my_dygraph(data$HR, 
                ylab_title = "HR", 
-               average_line = "HR" %in% average_lines,
-               yaxis_range = yaxis_ranges$HR,
+               y_line_type = series_options$HR$line_type,
+               y_line_val = series_options$HR$custom_y_val,
+               yaxis_range = series_options$HR$yaxis_range,
                color = colours[2]),
     my_dygraph(data$TEMP, 
                ylab_title = "Temperature", 
-               average_line = "TEMP" %in% average_lines,
-               yaxis_range = yaxis_ranges$TEMP,
+               y_line_type = series_options$TEMP$line_type,
+               y_line_val = series_options$TEMP$custom_y_val,
+               yaxis_range = series_options$TEMP$yaxis_range,
                color = colours[3]),
     my_dygraph(data$MOVE, 
                draw_x_axis = TRUE, 
                ylab_title = "Movement", 
-               average_line = "MOVE" %in% average_lines,
-               yaxis_range = yaxis_ranges$MOVE,
+               y_line_type = series_options$MOVE$line_type,
+               y_line_val = series_options$MOVE$custom_y_val,
+               yaxis_range = series_options$MOVE$yaxis_range,
                color = colours[4]) %>%
     dyRangeSelector()
   )

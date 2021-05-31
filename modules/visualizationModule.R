@@ -13,21 +13,36 @@ visualizationModuleUI <- function(id){
                
                fluidPage(
                  fluidRow(
-                   column(6,
+                   column(5,
+                          
+                          textInput(ns("txt_plot_main_title"), "Title"),
+                          
                           tags$label(class = "control-label", "Annotations"),
                           checkboxInput(ns("check_add_calendar_annotation"), 
                                         label = "Calendar events",
-                                        value = TRUE),
-                          textInput(ns("txt_plot_main_title"), "Title"),
-                          checkboxGroupInput(ns("check_average_lines"), "Add averages", 
-                                             choices = c("EDA","HR","TEMP","MOVE"))
-                   ),
-                   column(6,
+                                        value = TRUE)
                           
-                          numericRangeInput(ns("slide_yaxis_eda"), "EDA Y-axis range", value = c(0,20)),
-                          numericRangeInput(ns("slide_yaxis_hr"),  "HR Y-axis range", value = c(40, 160)),
-                          numericRangeInput(ns("slide_yaxis_temp"),"TEMP Y-axis range", value = c(24, 38)),
-                          numericRangeInput(ns("slide_yaxis_move"),"MOVE Y-axis range", value = c(0.98, 1.25))
+                          # other plot options?
+                            
+                   ),
+                   column(7,
+                          
+                          tags$h4("EDA"),
+                          visSeriesOptionsUI(ns("eda"), y_range = c(0,20)),
+                          tags$hr(),
+                          
+                          tags$h4("HR"),
+                          visSeriesOptionsUI(ns("hr"), y_range = c(40, 160)),
+                          tags$hr(),
+                          
+                          tags$h4("TEMP"),
+                          visSeriesOptionsUI(ns("temp"), y_range = c(24, 38)),
+                          tags$hr(),
+                          
+                          tags$h4("MOVE"),
+                          visSeriesOptionsUI(ns("move"), y_range = c(0.98, 1.25)),
+                          tags$hr()
+                          
                    )
                  ),
                  fluidRow(
@@ -73,12 +88,19 @@ visualizationModule <- function(input, output, session,
   hide_tab("plottab")
   hide_tab("plotannotations")
   
-  yaxis_ranges <- reactive(
+  # Call each module
+  y_eda <- callModule(visSeriesOptionsModule, "eda")
+  y_hr <- callModule(visSeriesOptionsModule, "hr")
+  y_temp <- callModule(visSeriesOptionsModule, "temp")
+  y_move <- callModule(visSeriesOptionsModule, "move")
+  
+  # Collect submodule output in a single reactive
+  series_options <- reactive(
     list(
-      EDA = input$slide_yaxis_eda,
-      HR = input$slide_yaxis_hr,
-      TEMP = input$slide_yaxis_temp,
-      MOVE = input$slide_yaxis_move
+      EDA = y_eda(),
+      HR = y_hr(),
+      TEMP = y_temp(),
+      MOVE = y_move()
     )
   )
  
@@ -105,14 +127,17 @@ visualizationModule <- function(input, output, session,
     plots <- e4_timeseries_plot(data$timeseries,
                                 main_title = input$txt_plot_main_title,
                                 calendar_data = annotatedata,
-                                average_lines =  input$check_average_lines,
-                                yaxis_ranges =  yaxis_ranges()
+                                series_options = series_options()
     )
     
     output$dygraph_current_data1 <- renderDygraph(plots[[1]])
     output$dygraph_current_data2 <- renderDygraph(plots[[2]])
     output$dygraph_current_data3 <- renderDygraph(plots[[3]])
     output$dygraph_current_data4 <- renderDygraph(plots[[4]])
+    
+    
+    # 
+    updateActionButton(session, "btn_make_plot", label = "Update plot", icon = icon("refresh"))
     
   })
   
