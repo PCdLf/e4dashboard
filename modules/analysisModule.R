@@ -7,28 +7,28 @@ analysisModuleUI <- function(id){
     fluidRow(
       shinydashboard::box(width = 12, title = "Analysis", 
                           
-                          tags$h4("Select begin date"),
-                          
-                          dateInput(ns("date_analysis_start"), label = "Select Date",
-                                    value = NULL, min = NULL, max = NULL,
-                                    width = 200),
+                          tags$h4("Select begin date / time"),
                           
                           side_by_side(
-                            numericInput(ns("time_hour_start"), "Hour", value = 0, width = 200),
-                            numericInput(ns("time_minute_start"), "Minutes", value = 0, width = 200),
-                            numericInput(ns("time_second_start"), "Seconds", value = 0, width = 200)
-                          ),tags$br(),
+                            dateInput(ns("date_analysis_start"), label = "Date",
+                                      value = NULL, min = NULL, max = NULL,
+                                      width = 200),
+                            numericInput(ns("time_hour_start"), "Hour", value = 0, width = 100),
+                            numericInput(ns("time_minute_start"), "Minutes", value = 0, width = 100),
+                            numericInput(ns("time_second_start"), "Seconds", value = 0, width = 100)
+                          ),
+                          tags$br(),
                           
-                          tags$h4("Select end date"),
-                          dateInput(ns("date_analysis_end"), label = "Select Date",
-                                    value = NULL, min = NULL, max = NULL,
-                                    width = 200),
-                          
+                          tags$h4("Select end date / time"),
                           side_by_side(
-                            numericInput(ns("time_hour_end"), "Hour", value = 0, width = 200),
-                            numericInput(ns("time_minute_end"), "Minutes", value = 0, width = 200),
-                            numericInput(ns("time_second_end"), "Seconds", value = 0, width = 200)
-                          ),tags$br(),
+                            dateInput(ns("date_analysis_end"), label = "Date",
+                                      value = NULL, min = NULL, max = NULL,
+                                      width = 200),
+                            numericInput(ns("time_hour_end"), "Hour", value = 0, width = 100),
+                            numericInput(ns("time_minute_end"), "Minutes", value = 0, width = 100),
+                            numericInput(ns("time_second_end"), "Seconds", value = 0, width = 100)
+                          ),
+                          tags$br(),
                           
                           actionButton(ns("btn_do_analysis"), "Run analysis", class = "btn-success", 
                                        icon = icon("calculator")),

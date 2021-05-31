@@ -65,10 +65,12 @@ dataUploadModule <- function(input, output, session){
         rv$data <- data[[1]]
       }
       
+      # Calculate aggregated version of the data for much quicker plotting
       rv$data_agg <- e4tools::aggregate_e4_data(rv$data)
       
     })
     
+    # Precalc. timeseries (for viz.)
     rv$timeseries <- list(
       EDA = e4tools::as_timeseries(rv$data_agg$EDA, name_col = "EDA"),
       HR = e4tools::as_timeseries(rv$data_agg$HR, name_col = "HR"),
