@@ -1,3 +1,16 @@
+
+.btn-help {
+    color: #fff;
+    background-color: #17a2b8;
+    border-color: #17a2b8;
+}
+
+.btn-help:hover {
+    color: #fff;
+    background-color: #138496;
+    border-color: #117a8b;
+}
+
 .inactivelink{
   pointer-events: none;
   cursor: default;

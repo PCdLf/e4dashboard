@@ -1,0 +1,9 @@
+dataupload: >
+  Select a ZIP file here, recorded by (some instrument)<br>
+  Must be standard format.<br>
+  More <strong>instructions</strong> here
+  
+calendar: >
+  Select a calendar file here.
+  Instructions on how to format the calendar here.
+

@@ -7,8 +7,15 @@ dataUploadUI <- function(id){
     fluidRow(
       
       shinydashboard::box(
-        width = 6,
+        width = 7,
         title = "Data input",
+        
+        tags$div(style = "width: 100%;",
+          tags$div(style = "float: right;",
+                   helpButtonUI(ns("help"))
+          )
+        ),
+        
         tags$p("Click Browse to select E4 zip files to use in the application"),
         tags$p("The data will not be permanently stored on the server."),
         fileInput(ns("select_zip_files"),
@@ -36,6 +43,8 @@ dataUploadModule <- function(input, output, session){
     timeseries = NULL,
     data_agg = NULL
   )
+  
+  callModule(helpButton, "help", helptext = .help$dataupload)
   
   observeEvent(input$select_zip_files, {
     

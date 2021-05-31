@@ -17,7 +17,7 @@ options(shiny.maxRequestSize = 30*1024^2)
 
 #- Configuration
 .cc <- yaml::read_yaml("config/config.yml")
-
+.help <- yaml::read_yaml("config/help.yml")
 
 # - Load functions
 source("R/functions.R")
@@ -32,5 +32,6 @@ source("modules/reportModule.R")
 source("modules/visualizationModule.R")
 source("modules/visSeriesOptionsModule.R")
 source("modules/batchModule.R")
+source("modules/helpButton.R")
 
 
