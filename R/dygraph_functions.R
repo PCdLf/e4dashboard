@@ -29,7 +29,8 @@ e4_timeseries_plot <- function(data,
 
     begin_time <- min(index(ts)) - 30*60
     
-    out <- dygraph(ts, main = main_title, group = "plot2", ylab = ylab_title, height = 150, width = 900) %>%   
+    out <- dygraph(ts, main = main_title, group = "plot2", 
+                   ylab = ylab_title, height = 150, width = 900) %>%   
       dyHighlight(highlightCircleSize = 5) %>%
       dyOptions(drawPoints = FALSE, 
                 drawXAxis = draw_x_axis,

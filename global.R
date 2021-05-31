@@ -17,7 +17,7 @@ options(shiny.maxRequestSize = 30*1024^2)
 # - Load functions
 source("R/functions.R")
 source("R/dygraph_functions.R")
-source("R/heartrate.R")
+source("R/ibi_analysis.R")
 
 
 #- Load modules

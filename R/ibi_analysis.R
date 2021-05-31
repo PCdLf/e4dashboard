@@ -43,10 +43,10 @@ ibi_analysis <- function(IBI){
   
   list(
     time = list(
-      SDNN = e4_hrv_data$TimeAnalysis$SDNN,
-      pNN50 = e4_hrv_data$TimeAnalysis$pNN50,
-      SDSD = e4_hrv_data$TimeAnalysis$SDSD,
-      rMSSD = e4_hrv_data$TimeAnalysis$rMSSD
+      SDNN = e4_hrv_data$TimeAnalysis[[1]]$SDNN,
+      pNN50 = e4_hrv_data$TimeAnalysis[[1]]$pNN50,
+      SDSD = e4_hrv_data$TimeAnalysis[[1]]$SDSD,
+      rMSSD = e4_hrv_data$TimeAnalysis[[1]]$rMSSD
     ),
     frequency = list(
       HF = mean(e4_hrv_data$FreqAnalysis[[1]]$HF, na.rm = TRUE),

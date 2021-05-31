@@ -33,10 +33,12 @@ analysisModuleUI <- function(id){
                           actionButton(ns("btn_do_analysis"), "Run analysis", class = "btn-success", 
                                        icon = icon("calculator")),
                           tags$hr(),
-                          dataTableOutput(ns("dt_analysis_output")),
                           shinyjs::hidden(
-                            actionButton(ns("btn_download_analysis"), "Download")  
-                          )
+                            actionButton(ns("btn_download_analysis"), "Download", icon = icon("download"),
+                                         class = "btn-success")  
+                          ),
+                          verbatimTextOutput(ns("analysis_out"))
+                          
                           
                           
       )
@@ -93,6 +95,7 @@ analysisModule <- function(input, output, session, data = reactive(NULL)){
   
   observeEvent(input$btn_do_analysis, {
     
+    toastr_info("Analysis started - this can take a few seconds.")
     
     start <- ISOdatetime(
       year = year(input$date_analysis_start),
@@ -119,7 +122,7 @@ analysisModule <- function(input, output, session, data = reactive(NULL)){
     data <- filter_e4data_datetime(data, start, end)
     
     last_analysis(
-      calculate_heartrate_params(data$IBI, data$EDA)
+      ibi_analysis(data$IBI)
     )
 
   })
@@ -131,16 +134,10 @@ analysisModule <- function(input, output, session, data = reactive(NULL)){
     shinyjs::show("btn_download_analysis")
     
   })
-  
-  output$dt_analysis_output <- DT::renderDT({
-    
-    last_analysis <- last_analysis()
-    req(last_analysis)
-    
-    # !! formatting
-    datatable(t(as.data.frame(last_analysis)))
-    
-  })  
+
+  output$analysis_out <- renderPrint({
+    last_analysis()
+  })
   
   
 }
