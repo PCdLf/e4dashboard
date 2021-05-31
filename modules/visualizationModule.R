@@ -28,19 +28,19 @@ visualizationModuleUI <- function(id){
                    column(7,
                           
                           tags$h4("EDA"),
-                          visSeriesOptionsUI(ns("eda"), y_range = c(0,20)),
+                          visSeriesOptionsUI(ns("eda"), y_range = .cc$visualisation$eda$yrange),
                           tags$hr(),
                           
                           tags$h4("HR"),
-                          visSeriesOptionsUI(ns("hr"), y_range = c(40, 160)),
+                          visSeriesOptionsUI(ns("hr"), y_range =.cc$visualisation$hr$yrange),
                           tags$hr(),
                           
                           tags$h4("TEMP"),
-                          visSeriesOptionsUI(ns("temp"), y_range = c(24, 38)),
+                          visSeriesOptionsUI(ns("temp"), y_range = .cc$visualisation$temp$yrange),
                           tags$hr(),
                           
                           tags$h4("MOVE"),
-                          visSeriesOptionsUI(ns("move"), y_range = c(0.98, 1.25)),
+                          visSeriesOptionsUI(ns("move"), y_range = .cc$visualisation$move$yrange),
                           tags$hr()
                           
                    )

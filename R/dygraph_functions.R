@@ -11,8 +11,7 @@
 e4_timeseries_plot <- function(data, 
                                main_title = "",
                                calendar_data = NULL,
-                               series_options = NULL,
-                               colours = c("#1874CD", "#FF7F00", "#458B00", "#68228B")){
+                               series_options = NULL){
   
   
   my_dygraph <- function(ts, 
@@ -99,26 +98,26 @@ e4_timeseries_plot <- function(data,
                y_line_type = series_options$EDA$line_type,
                y_line_val = series_options$EDA$custom_y_val,
                yaxis_range = series_options$EDA$yaxis_range,
-               color = colours[1]),
+               color = .cc$visualisation$eda$color),
     my_dygraph(data$HR, 
                ylab_title = "HR", 
                y_line_type = series_options$HR$line_type,
                y_line_val = series_options$HR$custom_y_val,
                yaxis_range = series_options$HR$yaxis_range,
-               color = colours[2]),
+               color = .cc$visualisation$hr$color),
     my_dygraph(data$TEMP, 
                ylab_title = "Temperature", 
                y_line_type = series_options$TEMP$line_type,
                y_line_val = series_options$TEMP$custom_y_val,
                yaxis_range = series_options$TEMP$yaxis_range,
-               color = colours[3]),
+               color = .cc$visualisation$temp$color),
     my_dygraph(data$MOVE, 
                draw_x_axis = TRUE, 
                ylab_title = "Movement", 
                y_line_type = series_options$MOVE$line_type,
                y_line_val = series_options$MOVE$custom_y_val,
                yaxis_range = series_options$MOVE$yaxis_range,
-               color = colours[4]) %>%
+               color = .cc$visualisation$move$color) %>%
     dyRangeSelector()
   )
 }
