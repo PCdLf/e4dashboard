@@ -65,7 +65,7 @@ e4_timeseries_plot <- function(data,
       # 'Start' events
       for(i in 1:nrow(events)){
         
-        txt <- ifelse(events_label, events$Tekst[i], "")
+        txt <- ifelse(events_label, events$Text[i], "")
         
         out <- out %>%
           dyEvent(events$Start[i], txt, labelLoc="bottom")
