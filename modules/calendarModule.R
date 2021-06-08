@@ -34,8 +34,8 @@ calendarUI <- function(id){
                           title = "Calendar",
                           
                           tags$div(id = "calendar_in_block",
-                                   tags$p("Optionally, select an Excel spreadsheet with Calendar data."),
-                                   tags$p("Please consult the documentation for the format of the calendar."),
+                                   tags$p("Optionally, select an Excel spreadsheet or textfile with Calendar data."),
+                                   tags$p("Please consult the documentation or Help button for the format of the calendar."),
                                    
                                    fileInput(ns("select_calendar_file"),
                                              label = "Choose Calendar (XLS/XLSX/TXT) file", 
