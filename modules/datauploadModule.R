@@ -16,7 +16,7 @@ dataUploadUI <- function(id){
           )
         ),
         
-        tags$p("Click Browse to select E4 zip files to use in the application"),
+        tags$p("Click Browse to select E4 zip files to use in the application."),
         tags$p("The data will not be permanently stored on the server."),
         fileInput(ns("select_zip_files"),
                   label = "Choose ZIP file(s)", 
@@ -92,8 +92,15 @@ dataUploadModule <- function(input, output, session){
     toastr_success("Data read successfully.")
     
     output$msg_data_read <- renderUI({
-      tags$p("Data read successfully. To read a new dataset, upload a new Zip file.", 
-             style = "color: blue;")
+      
+        tags$body(
+          
+          p("Data was uploaded and read successfully. Go to the Calendar Tab.", style = "color: blue;"),
+          p("To read in a new dataset, upload a new Zip file.")
+          
+        )
+        
+      
     })
 
     enable_link("tabCalendar")

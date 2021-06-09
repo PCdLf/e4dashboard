@@ -27,12 +27,17 @@ visualizationModuleUI <- function(id){
                           tags$hr(),
                           actionButton(ns("btn_make_plot"), 
                                        "Make plot", icon = icon("check"), 
-                                       class = "btn-success btn-lg")  
+                                       class = "btn-success btn-lg"),
+                          
+                          tags$br(),
+                          tags$hr(),
+                          helpButtonUI(ns("help"))
                           
                           # other plot options?
                             
                    ),
                    column(7,
+                          
                           
                           tags$h4("EDA"),
                           visSeriesOptionsUI(ns("eda"), y_range = .cc$visualisation$eda$yrange),
@@ -92,6 +97,8 @@ visualizationModule <- function(input, output, session,
   
   hide_tab("plottab")
   hide_tab("plotannotations")
+  
+  callModule(helpButton, "help", helptext = .help$visualization)
   
   # Call each module
   y_eda <- callModule(visSeriesOptionsModule, "eda")

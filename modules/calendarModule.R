@@ -33,6 +33,12 @@ calendarUI <- function(id){
       shinydashboard::box(width = 8,
                           title = "Calendar",
                           
+                          tags$div(style = "width: 100%;",
+                                   tags$div(style = "float: right;",
+                                            helpButtonUI(ns("help"))
+                                   )
+                          ),
+                          
                           tags$div(id = "calendar_in_block",
                                    tags$p("Optionally, select an Excel spreadsheet or textfile with Calendar data."),
                                    tags$p("Please consult the documentation or Help button for the format of the calendar."),
@@ -66,6 +72,8 @@ calendarUI <- function(id){
 calendarModule <- function(input, output, session){
   
   calendar_out <- reactiveVal()
+  
+  callModule(helpButton, "help", helptext = .help$calendar)
   
   observeEvent(input$select_calendar_file, {
     
