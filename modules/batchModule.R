@@ -8,8 +8,9 @@ batchModuleUI <- function(id){
     fluidRow(
       
       shinydashboard::box(
-        width = 6,
+        width = 8,
         title = "Batch Analysis",
+        
         
        fluidRow(
          column(6,
@@ -37,6 +38,12 @@ batchModuleUI <- function(id){
         
       ),
       
+      tags$div(style = "width: 100%;",
+               tags$div(style = "float: right;",
+                        helpButtonUI(ns("help"))
+               )
+      ),
+      
       verbatimTextOutput(ns("txt_out"))
     )
     
@@ -54,6 +61,7 @@ choose_directory <- function(caption = 'Select data directory') {
 
 batchModule <- function(input, output, session){
   
+  callModule(helpButton, "help", helptext = .help$batch)
   
   folder_in <- reactiveVal()
   folder_out <- reactiveVal()

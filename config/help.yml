@@ -89,13 +89,16 @@ visualization: >
   Note that the plots use an aggregated version of the physiological signals (5 minute aggregates) to speed up the visualization. 
 
 analysis: >
-  Write down here
-
+  
+  The user can select a time frame for which the features should be extracted. By default the entire recording period is selected. <br>
+  The analysis will only be run on that specific time period and extracted features will appear in the box below.
+  
 report: >
-  Create a report that contains
+  Create a report that contains the graph, the analysis and the calendar data. <br>
+  The report is created as an HTML page.
   
 batch: >
-  Batch here
+  Users can batch process large amounts of Empatica E4 files here and set parameters accordingly.
   
   
   

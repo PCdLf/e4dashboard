@@ -5,7 +5,13 @@ analysisModuleUI <- function(id){
   
   fluidPage(
     fluidRow(
-      shinydashboard::box(width = 12, title = "Analysis", 
+      shinydashboard::box(width = 12, title = "Analysis",
+                          
+                          tags$div(style = "width: 100%;",
+                                   tags$div(style = "float: right;",
+                                            helpButtonUI(ns("help"))
+                                   )
+                          ),
                           
                           tags$h4("Select begin date / time"),
                           
@@ -52,6 +58,8 @@ analysisModuleUI <- function(id){
 
 analysisModule <- function(input, output, session, data = reactive(NULL)){
   
+  # Help Button
+  callModule(helpButton, "help", helptext = .help$analysis)
   
   # Fill analysis times
   observe({
