@@ -81,7 +81,7 @@ e4_timeseries_plot <- function(data,
           out <- out %>%
             dyShading(from = eventsub$Start[i],
                       to = eventsub$End[i],
-                      color = "rgba(220,220,220,0.4)")
+                      color = eventsub$Color[i])
           
         }
       }
