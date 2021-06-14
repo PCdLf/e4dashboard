@@ -71,6 +71,7 @@ calendarUI <- function(id){
 
 calendarModule <- function(input, output, session){
   
+  
   calendar_out <- reactiveVal()
   
   callModule(helpButton, "help", helptext = .help$calendar)
@@ -89,6 +90,8 @@ calendarModule <- function(input, output, session){
   
   # Make sure to use DT:: to use the right renderDataTable (shiny has an old version)
   output$dt_calendar <- DT::renderDataTable({
+    
+    
     
     req(calendar_out())
     
