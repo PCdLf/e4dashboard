@@ -13,13 +13,16 @@ function(input, output, session) {
   #   readRDS("data.rds")
   # })
   
-  callModule(visualizationModule, "viz", data = data_in, calendar = calendar)
+  rendered_plots <- callModule(visualizationModule, "viz", data = data_in, calendar = calendar)
   
   analysis <- callModule(analysisModule, "analysis", data = data_in)
  
   callModule(batchModule, "batch") 
   
-  callModule(reportModule, "report", analysis = analysis, calendar = calendar)
+  callModule(reportModule, "report", 
+             plots = rendered_plots, 
+             analysis = analysis, 
+             calendar = calendar)
   
 }
 

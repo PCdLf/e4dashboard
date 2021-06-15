@@ -1,8 +1,5 @@
 function(){
 
-  # shinydashboardPlus
-  # dashboardPagePlus
-  
   sidebar <- dashboardSidebar(
     sidebarMenu(
       id = "sidebar",

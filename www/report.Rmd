@@ -14,6 +14,23 @@ library(kableExtra)
 knitr::opts_chunk$set(echo = FALSE)
 ```
   
+  
+  
+# Timeseries plot
+
+
+```{r}
+plots[[1]]
+plots[[2]]
+plots[[3]]
+plots[[4]]
+```
+
+  
+  
+  
+  
+  
 # Calendar events
 
 ```{r eval=TRUE}

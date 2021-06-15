@@ -5,7 +5,6 @@ reportModuleUI <- function(id){
     fluidRow(
       shinydashboard::box(width = 8, title = "Report", 
                           
-                          
                           tags$p("Download a report of the current analysis."),
                           downloadButton(ns("btn_download_report"), "Download Report",
                                          icon = icon("file-download"),
@@ -26,6 +25,7 @@ reportModuleUI <- function(id){
 
 
 reportModule <- function(input, output, session, 
+                         plots = reactive(NULL),
                          calendar = reactive(NULL),
                          analysis = reactive(NULL)){
   
@@ -44,6 +44,7 @@ reportModule <- function(input, output, session,
       
       analysis <- analysis()
       calendar <- calendar()
+      plots <- plots()
       
       rmarkdown::render(tempReport, output_file = file)
       
