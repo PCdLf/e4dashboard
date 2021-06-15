@@ -18,14 +18,17 @@ visSeriesOptionsUI <- function(id, y_range){
 
 
 
-visSeriesOptionsModule <- function(input, output, session){
+visSeriesOptionsModule <- function(input, output, session, selected = c("mean","custom"), custom_y = 0){
+
+  selected <- match.arg(selected)
+  updateRadioButtons(session, "chk_line_type", selected = selected)
   
   output$ui_custom_line_val <- renderUI({
     
     req(input$chk_line_type)
     
     if(input$chk_line_type == "custom"){
-      numericInput(session$ns("num_custom_y"), "Y-value", value = 0, width = 100)
+      numericInput(session$ns("num_custom_y"), "Y-value", value = custom_y, width = 100)
     } else {
       NULL
     }

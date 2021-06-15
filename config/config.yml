@@ -11,4 +11,5 @@ visualisation:
   move:
     yrange: [0.98, 1.25]
     color: "#68228B"
+    custom_y: 1.07
   default_color: "blue"

@@ -52,7 +52,9 @@ visualizationModuleUI <- function(id){
                           tags$hr(),
                           
                           tags$h4("MOVE"),
-                          visSeriesOptionsUI(ns("move"), y_range = .cc$visualisation$move$yrange)
+                          visSeriesOptionsUI(ns("move"), 
+                                             y_range = .cc$visualisation$move$yrange
+                                             )
                           
                    )
                  )
@@ -104,7 +106,8 @@ visualizationModule <- function(input, output, session,
   y_eda <- callModule(visSeriesOptionsModule, "eda")
   y_hr <- callModule(visSeriesOptionsModule, "hr")
   y_temp <- callModule(visSeriesOptionsModule, "temp")
-  y_move <- callModule(visSeriesOptionsModule, "move")
+  y_move <- callModule(visSeriesOptionsModule, "move", selected = "custom",
+                       custom_y = .cc$visualisation$move$custom_y)
   
   # Collect submodule output in a single reactive
   series_options <- reactive(
