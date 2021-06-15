@@ -4,7 +4,6 @@ output: html_document
 ---
   
 ```{r include=FALSE}
-library(e4tools)
 library(dygraphs)
 library(xts)
 library(dplyr)
