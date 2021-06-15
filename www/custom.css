@@ -17,6 +17,11 @@
   color: grey !important;
 }
 
+
+.btn-info{
+  color: white !important;
+}
+
 .btn-success{
   color: #fff !important;
   background-color: #28a745  !important;

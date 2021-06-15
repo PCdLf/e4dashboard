@@ -8,7 +8,7 @@ dataUploadUI <- function(id){
       
       
       shinydashboard::box(
-        width = 7,
+        width = 8,
         title = "Data input",
         
         tags$div(style = "width: 100%;",
@@ -19,11 +19,22 @@ dataUploadUI <- function(id){
         
         tags$p("Click Browse to select E4 zip files to use in the application."),
         tags$p("The data will not be permanently stored on the server."),
-        fileInput(ns("select_zip_files"),
-                  label = "Choose ZIP file(s)", 
-                  multiple = TRUE, 
-                  accept = ".zip",
-                  buttonLabel = "Browse..."),
+        
+        side_by_side(
+          fileInput(ns("select_zip_files"),
+                    label = "Choose ZIP file(s)", 
+                    multiple = TRUE, 
+                    accept = ".zip",
+                    width = 300,
+                    buttonLabel = "Browse..."),
+         
+          tags$div(style = "padding-left: 50px; padding-top: 25px;",
+            actionButton(ns("btn_use_example_data"), "Or use example data", 
+                         icon = icon("hand-point-right"), class = "btn-info")  
+          )
+          
+           
+        ),
         
         uiOutput(ns("msg_files_selected")),
         tags$br(),
@@ -47,9 +58,22 @@ dataUploadModule <- function(input, output, session){
   
   callModule(helpButton, "help", helptext = .help$dataupload)
   
+  
+  observeEvent(input$btn_use_example_data, {
+    rv$zip_files <- data.frame(
+      name = "1574839870_A00204.zip",
+      size = NA,
+      type = "application/x-zip-compressed",
+      datapath = "www/example_data/1574839870_A00204.zip"
+    )
+  })
+  
+  
   observeEvent(input$select_zip_files, {
-    
     rv$zip_files <- input$select_zip_files
+  })
+  
+  observeEvent(rv$zip_files, {
     
     # Read selected ZIP files
     fns <- rv$zip_files$datapath
