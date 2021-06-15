@@ -63,8 +63,8 @@ kable(calendar, format = "html") %>%
 ## IBI Time analysis
 ```{r eval=TRUE}
 
-  as.data.frame(analysis$ibi$time_analysis) %>%
-  kable(format = "html") %>%
+  analysis_summary_table(analysis) %>%
+  kable(format = "html", digits = 2) %>%
   kable_styling()
 
 ```
