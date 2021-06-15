@@ -22,6 +22,25 @@ read_calendar <- function(fn){
 }
 
 
+validate_calendar <- function(data){
+  
+  nms <- c("Date" ,"Start", "End" , "Text")
+  
+  all(nms) %in% names(data)
+  
+}
+
+calendar_add_color <- function(data){
+  
+  if(!"Color" %in% names(data)){
+    
+    data$Color <- .cc$visualisation$default_color
+    
+  }
+  
+  return(data)
+}
+
 
 
 calendarUI <- function(id){
@@ -80,18 +99,27 @@ calendarModule <- function(input, output, session){
     
     dfr <- input$select_calendar_file
     
-    calendar_out(
-      read_calendar(dfr$datapath)
-    )
+    data <- read_calendar(dfr$datapath)
     
-    shinyjs::hide("calendar_in_block")
-    shinyjs::show("calendar_block")
+    if(!validate_calendar(data)){
+      toastr_error("Calendar data must have columns Date, Start, End, Text, (Color), click Help!")
+    } else {
+      
+      data <- calendar_add_color(data)
+      
+      calendar_out(
+        data
+      )
+      
+      shinyjs::hide("calendar_in_block")
+      shinyjs::show("calendar_block")  
+    }
+    
+    
   })
   
   # Make sure to use DT:: to use the right renderDataTable (shiny has an old version)
   output$dt_calendar <- DT::renderDataTable({
-    
-    
     
     req(calendar_out())
     
@@ -100,7 +128,7 @@ calendarModule <- function(input, output, session){
              Start = format(Start, "%H:%M:%S"),
              End = format(End, "%H:%M:%S")
       ) %>% 
-      datatable()
+      datatable(selection = "none")
     
   })
   

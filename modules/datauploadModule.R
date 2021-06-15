@@ -6,6 +6,7 @@ dataUploadUI <- function(id){
   fluidPage(
     fluidRow(
       
+      
       shinydashboard::box(
         width = 7,
         title = "Data input",
