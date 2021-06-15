@@ -13,7 +13,7 @@ Author: Peter de Looff [aut, cre],
   Saskia Koldijk [aut],
   Kees de Schepper [aut],
   Sara Taylor [ctb]
-Depends: R (>= 3.6.1), shiny, shinydashboard, shinyjs, shinyWidgets, e4tools, DT, RHRV, xts, glue, zip, dplyr, lubridate, dygraphs, readxl, shinycssloaders, readxl, RHRV, rmarkdown, kableExtra, knitr
+Depends: R (>= 3.6.1), shiny, shinydashboard, shinyjs, shinyWidgets, wearables, DT, RHRV, xts, glue, zip, dplyr, lubridate, dygraphs, readxl, shinycssloaders, readxl, RHRV, rmarkdown, kableExtra, knitr
 Maintainer: Peter <peterdelooff@gmail.com>
 Description: Shiny application to view and transform E4 data.
 License: GPL-2
