@@ -119,29 +119,29 @@ dataUploadModule <- function(input, output, session){
       for(i in seq_along(fns)){
         
         incProgress(1/n, detail = fn_names[i])
-        data[[i]] <- e4tools::read_e4(fns[i])
+        data[[i]] <- wearables::read_e4(fns[i])
         
       }
       
       # If more than 1 zip file selected, row-bind them using our custom function
       incProgress(1/n, detail = "Row-binding")
       if(length(fns) > 1){
-        rv$data <- e4tools::rbind_e4(data)
+        rv$data <- wearables::rbind_e4(data)
       } else {
         rv$data <- data[[1]]
       }
       
       # Calculate aggregated version of the data for much quicker plotting
-      rv$data_agg <- e4tools::aggregate_e4_data(rv$data)
+      rv$data_agg <- wearables::aggregate_e4_data(rv$data)
       
     })
     
     # Precalc. timeseries (for viz.)
     rv$timeseries <- list(
-      EDA = e4tools::as_timeseries(rv$data_agg$EDA, name_col = "EDA"),
-      HR = e4tools::as_timeseries(rv$data_agg$HR, name_col = "HR"),
-      TEMP = e4tools::as_timeseries(rv$data_agg$TEMP, name_col = "Temperature"),
-      MOVE = e4tools::as_timeseries(rv$data_agg$ACC, index = 5, name_col = "Movement")
+      EDA = wearables::as_timeseries(rv$data_agg$EDA, name_col = "EDA"),
+      HR = wearables::as_timeseries(rv$data_agg$HR, name_col = "HR"),
+      TEMP = wearables::as_timeseries(rv$data_agg$TEMP, name_col = "Temperature"),
+      MOVE = wearables::as_timeseries(rv$data_agg$ACC, index = 5, name_col = "Movement")
     )
     
     

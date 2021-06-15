@@ -142,10 +142,11 @@ visualizationModule <- function(input, output, session,
       annotatedata <- NULL
     }
     
-    plots <- e4tools::e4_timeseries_plot(data$timeseries,
+    plots <- e4_timeseries_plot(data$timeseries,
                                 main_title = input$txt_plot_main_title,
                                 calendar_data = annotatedata,
-                                series_options = series_options()
+                                series_options = series_options(),
+                                config = .cc$visualisation
     )
     
     plot_output(plots)

@@ -1,6 +1,6 @@
 
 suppressPackageStartupMessages({
-  library(e4tools)
+  library(wearables)
   library(shiny) 
   library(shinydashboard)
   library(zip)

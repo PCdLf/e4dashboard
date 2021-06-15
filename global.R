@@ -3,8 +3,8 @@
 
 source("preload/load_packages.R")
 
-if(packageVersion("e4tools") < "0.6"){
-  stop("Please update e4tools!")
+if(packageVersion("wearables") < "0.6"){
+  stop("Please update wearables!")
 }
 
 
@@ -13,7 +13,7 @@ options(shiny.maxRequestSize = 30*1024^2)
 
 
 # !! alleen voor dev
-#load_all("../e4tools/")
+#load_all("../wearables/")
 
 #- Configuration
 .cc <- yaml::read_yaml("config/config.yml")
@@ -21,7 +21,7 @@ options(shiny.maxRequestSize = 30*1024^2)
 
 # - Load functions
 source("R/functions.R")
-
+source("R/e4_timeseries_plot.R")
 
 #- Load modules
 source("modules/analysisModule.R")
