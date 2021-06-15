@@ -86,8 +86,6 @@ batchModule <- function(input, output, session){
   
   output$ui_folder_out <- renderUI({
     tags$p(folder_out())
-    
-    }
   })
   
   observe({
