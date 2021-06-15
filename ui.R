@@ -12,7 +12,6 @@ function(){
       menuItem("Analysis", tabName = "tabAnalysis", icon = icon("chart-line")),
       menuItem("Report", tabName = "tabReport", icon = icon("file-alt")),
       menuItem("Batch analysis", tabName = "tabBatch", icon = icon("list-ol"))
-
     )
   )
 
