@@ -148,7 +148,12 @@ visualizationModule <- function(input, output, session,
                                 series_options = series_options()
     )
     
-    plot_output(plots)
+    plot_output(list(
+      timeseries = data$timeseries,
+      main_title = input$txt_plot_main_title,
+      calendar_data = annotatedata,
+      series_options = series_options()
+    ))
     
     output$dygraph_current_data1 <- renderDygraph(plots[[1]])
     output$dygraph_current_data2 <- renderDygraph(plots[[2]])

@@ -48,7 +48,7 @@ e4_timeseries_plot <- function(data,
       out <- out %>%
         dygraphs::dyAxis("y", valueRange = yaxis_range)
     }
-    
+
     
     if(!is.null(events)){
       

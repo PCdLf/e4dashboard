@@ -179,7 +179,11 @@ analysisModule <- function(input, output, session,
       
       analysis <- last_analysis()
       calendar <- calendar()
-      plots <- plots()
+
+      plots <- e4_timeseries_plot(plots()$timeseries,
+                                  main_title = plots()$main_title,
+                                  calendar_data = plots()$calendar_data,
+                                  series_options = plots()$series_options)
       
       rmarkdown::render(tempReport, output_file = file)
       
