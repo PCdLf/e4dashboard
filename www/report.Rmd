@@ -36,7 +36,7 @@ eda_bin_plot_data <- padr::thicken(analysis$eda_bin, interval = "1 min", colname
   group_by(datetime_1min) %>%
   summarize(frac_bad_data = mean(label == -1))
 
-x_data <- xts(select(eda_bin_plot_data,datetime_1min, frac_bad_data ), order.by = out[[1]])
+x_data <- xts(select(eda_bin_plot_data, datetime_1min, frac_bad_data ), order.by = eda_bin_plot_data[[1]])
 
 dygraph(x_data, height = 200, width = 900, ylab = "Fraction bad data") %>%
   dygraphs::dyOptions(colors = "#f94144")
