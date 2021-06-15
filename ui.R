@@ -7,7 +7,6 @@ function(){
       menuItem("Calendar", tabName = "tabCalendar", icon = icon("calendar-alt")),
       menuItem("Visualization", tabName = "tabVisualization", icon = icon("chart-bar")),
       menuItem("Analysis", tabName = "tabAnalysis", icon = icon("chart-line")),
-      menuItem("Report", tabName = "tabReport", icon = icon("file-alt")),
       menuItem("Batch analysis", tabName = "tabBatch", icon = icon("list-ol"))
     )
   )
@@ -42,11 +41,7 @@ function(){
               analysisModuleUI("analysis")
               
       ),
-      tabItem("tabReport",
-              
-              reportModuleUI("report")
-              
-      ),
+
       tabItem("tabBatch",
               
               batchModuleUI("batch")

@@ -130,7 +130,6 @@ dataUploadModule <- function(input, output, session){
 
     enable_link("tabCalendar")
     enable_link("tabVisualization")
-    enable_link("tabAnalysis")
 
     
   })

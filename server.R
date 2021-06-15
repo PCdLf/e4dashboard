@@ -2,7 +2,6 @@ function(input, output, session) {
   disable_link("tabCalendar")
   disable_link("tabVisualization")
   disable_link("tabAnalysis")
-  disable_link("tabReport")
 
 
   data_in <- callModule(dataUploadModule, "data")
@@ -15,14 +14,10 @@ function(input, output, session) {
   
   rendered_plots <- callModule(visualizationModule, "viz", data = data_in, calendar = calendar)
   
-  analysis <- callModule(analysisModule, "analysis", data = data_in)
+  callModule(analysisModule, "analysis", data = data_in, plots = rendered_plots)
  
   callModule(batchModule, "batch") 
   
-  callModule(reportModule, "report", 
-             plots = rendered_plots, 
-             analysis = analysis, 
-             calendar = calendar)
   
 }
 

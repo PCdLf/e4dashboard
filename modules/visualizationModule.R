@@ -156,6 +156,7 @@ visualizationModule <- function(input, output, session,
     # 
     toastr_success("Plot constructed, click on the 'Plot' tab!")
     updateActionButton(session, "btn_make_plot", label = "Update plot", icon = icon("refresh"))
+    enable_link("tabAnalysis")
     
   })
   

@@ -5,49 +5,55 @@ analysisModuleUI <- function(id){
   
   fluidPage(
     fluidRow(
-      shinydashboard::box(width = 12, title = "Analysis",
+      shinydashboard::box(width = 12, title = tagList(icon("chart-line"), "Analysis"),
                           
-                          tags$div(style = "width: 100%;",
+                          tags$div(style = "width: 100%; height: 30px;",
                                    tags$div(style = "float: right;",
                                             helpButtonUI(ns("help"))
                                    )
                           ),
                           
-                          tags$h4("Select begin date / time"),
                           
-                          side_by_side(
-                            dateInput(ns("date_analysis_start"), label = "Date",
-                                      value = NULL, min = NULL, max = NULL,
-                                      width = 200),
-                            numericInput(ns("time_hour_start"), "Hour", value = 0, width = 100),
-                            numericInput(ns("time_minute_start"), "Minutes", value = 0, width = 100),
-                            numericInput(ns("time_second_start"), "Seconds", value = 0, width = 100)
-                          ),
-                          tags$br(),
+                          fluidRow(
+                            column(6, 
+                                   
+                                   tags$p("Run the signal analysis for the time period shown on the visualisation tab, 
+                                          or adjust the period with the menu on the right."),
+                                   tags$p("When the analysis is complete, you can download the report in a box below."),
+                                   
+                                   actionButton(ns("btn_do_analysis"), "Run analysis", class = "btn-success btn-lg", 
+                                                icon = icon("calculator"))       
+                                   
+                            ),
+                            column(6,
+                                   tags$h4("Select begin date / time"),
+                                   
+                                   side_by_side(
+                                     dateInput(ns("date_analysis_start"), label = "Date",
+                                               value = NULL, min = NULL, max = NULL,
+                                               width = 200),
+                                     numericInput(ns("time_hour_start"), "Hour", value = 0, width = 100),
+                                     numericInput(ns("time_minute_start"), "Minutes", value = 0, width = 100),
+                                     numericInput(ns("time_second_start"), "Seconds", value = 0, width = 100)
+                                   ),
+                                   tags$br(),
+                                   
+                                   tags$h4("Select end date / time"),
+                                   side_by_side(
+                                     dateInput(ns("date_analysis_end"), label = "Date",
+                                               value = NULL, min = NULL, max = NULL,
+                                               width = 200),
+                                     numericInput(ns("time_hour_end"), "Hour", value = 0, width = 100),
+                                     numericInput(ns("time_minute_end"), "Minutes", value = 0, width = 100),
+                                     numericInput(ns("time_second_end"), "Seconds", value = 0, width = 100)
+                                   )
+                                   
+                            )
+                          )
                           
-                          tags$h4("Select end date / time"),
-                          side_by_side(
-                            dateInput(ns("date_analysis_end"), label = "Date",
-                                      value = NULL, min = NULL, max = NULL,
-                                      width = 200),
-                            numericInput(ns("time_hour_end"), "Hour", value = 0, width = 100),
-                            numericInput(ns("time_minute_end"), "Minutes", value = 0, width = 100),
-                            numericInput(ns("time_second_end"), "Seconds", value = 0, width = 100)
-                          ),
-                          tags$br(),
                           
-                          actionButton(ns("btn_do_analysis"), "Run analysis", class = "btn-success", 
-                                       icon = icon("calculator")),
-                          tags$hr(),
-                          shinyjs::hidden(
-                            actionButton(ns("btn_download_analysis"), "Download", icon = icon("download"),
-                                         class = "btn-success")  
-                          ),
-                          verbatimTextOutput(ns("analysis_out"))
-                          
-                          
-                          
-      )
+      ),
+      uiOutput(ns("ui_download_report"))
     )
   )
   
@@ -56,7 +62,10 @@ analysisModuleUI <- function(id){
 
 
 
-analysisModule <- function(input, output, session, data = reactive(NULL)){
+analysisModule <- function(input, output, session, 
+                           data = reactive(NULL),
+                           plots = reactive(NULL),
+                           calendar = reactive(NULL)){
   
   # Help Button
   callModule(helpButton, "help", helptext = .help$analysis)
@@ -103,7 +112,7 @@ analysisModule <- function(input, output, session, data = reactive(NULL)){
   
   observeEvent(input$btn_do_analysis, {
     
-    toastr_info("Analysis started - this can take a few seconds.")
+    toastr_info("Analysis started - this can take a few seconds.", showDuration = 5000)
     
     start <- ISOdatetime(
       year = year(input$date_analysis_start),
@@ -142,22 +151,52 @@ analysisModule <- function(input, output, session, data = reactive(NULL)){
     )
 
   })
-
-  observe({
-    
-    last_analysis <- last_analysis()
-    req(last_analysis)
-    shinyjs::show("btn_download_analysis")
-    enable_link("tabReport")
-    
-  })
-
-  output$analysis_out <- renderPrint({
-    last_analysis()
-  })
   
   
-return(last_analysis)
+  output$ui_download_report <- renderUI({
+    
+    req(last_analysis())
+    shinydashboard::box(width = 12, title = tagList(icon("file-medical-alt"), "Report"), 
+                        
+                        tags$p("Download a report of the current analysis."),
+                        downloadButton(session$ns("btn_download_report"), "Download Report",
+                                       icon = icon("file-download"),
+                                       class = "btn btn-lg btn-success"),
+                        
+                        tags$div(style = "width: 100%;",
+                                 tags$div(style = "float: right;",
+                                          helpButtonUI(session$ns("help-report"))
+                                 )
+                        )
+                        
+    )
+    
+    
+  })
+  
+  output$btn_download_report <- downloadHandler(
+    
+    filename = "e4_analysis.html",
+    
+    content = function(file){
+      
+      tempReport <- file.path(tempdir(), "report.Rmd")
+      file.copy("www/report.Rmd", tempReport, overwrite = TRUE)
+      
+      analysis <- last_analysis()
+      calendar <- calendar()
+      plots <- plots()
+      
+      rmarkdown::render(tempReport, output_file = file)
+      
+    }
+    
+  )
+  
+  callModule(helpButton, "help-report", helptext = .help$report)
+  
+  
+  
 }
 
 
