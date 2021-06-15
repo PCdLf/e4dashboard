@@ -13,6 +13,11 @@ batchModuleUI <- function(id){
         
         
        fluidRow(
+         
+         column(12,
+                tags$p("Select the input and output folder for a batch analysis of multiple ZIP files.")
+         ),
+         
          column(6,
                 actionButton(ns("btn_select_folder_input"), "Select input folder", 
                              icon = icon("folder-open"), class = "btn-light"),
@@ -67,16 +72,22 @@ batchModule <- function(input, output, session){
   folder_out <- reactiveVal()
   
   observeEvent(input$btn_select_folder_input, {
-    folder_in(
-      choose_directory()
-    )
+    chc <- choose_directory()
+    if(!is.na(chc)){
+      folder_in(chc)  
+    }
+    
     
   })
   
   observeEvent(input$btn_select_folder_output, {
-    folder_out(
-      choose_directory()
-    )
+    
+    chc <- choose_directory()
+    
+    if(!is.na(chc)){
+      folder_out(chc)  
+    }
+    
     
   })
   

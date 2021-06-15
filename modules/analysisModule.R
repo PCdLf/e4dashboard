@@ -143,6 +143,8 @@ analysisModule <- function(input, output, session,
     eda_filt <- wearables::process_eda(data$EDA)
     eda_feat <- compute_features2(eda_filt)
     
+    
+    
     last_analysis(
       list(
         ibi = ibi_analysis,
