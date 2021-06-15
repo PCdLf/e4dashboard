@@ -14,7 +14,8 @@ function(input, output, session) {
   
   rendered_plots <- callModule(visualizationModule, "viz", data = data_in, calendar = calendar)
   
-  callModule(analysisModule, "analysis", data = data_in, plots = rendered_plots)
+  callModule(analysisModule, "analysis", data = data_in, plots = rendered_plots,
+             calendar = calendar)
  
   callModule(batchModule, "batch") 
   
