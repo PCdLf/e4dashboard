@@ -204,7 +204,6 @@ analysisModule <- function(input, output, session,
 
 if(FALSE){
   
-  
   library(shiny)
   
   ui <- fluidPage(
