@@ -112,7 +112,8 @@ analysisModule <- function(input, output, session,
   
   observeEvent(input$btn_do_analysis, {
     
-    toastr_info("Analysis started - this can take a few seconds.", showDuration = 5000)
+    toastr_warning("Analysis started - please be patient, this can a minute or longer", 
+                   timeOut = 0, extendedTimeOut = 3000)
     
     start <- ISOdatetime(
       year = year(input$date_analysis_start),
@@ -135,28 +136,19 @@ analysisModule <- function(input, output, session,
     )
     
     data <- data()$data
+    data <- wearables::filter_e4data_datetime(data, start, end)
     
-    data <- filter_e4data_datetime(data, start, end)
-    
-    ibi_analysis <-  wearables::ibi_analysis(data$IBI)
-    
-    eda_filt <- wearables::process_eda(data$EDA)
-    eda_feat <- compute_features2(eda_filt)
-    
-    
+    analysis_out <- wearables::process_e4(data)
     
     last_analysis(
-      list(
-        ibi = ibi_analysis,
-        eda = eda_feat
-      )
+      analysis_out
     )
 
   })
   
   
+
   output$ui_download_report <- renderUI({
-    
     req(last_analysis())
     shinydashboard::box(width = 12, title = tagList(icon("file-medical-alt"), "Report"), 
                         
