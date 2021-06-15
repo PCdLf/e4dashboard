@@ -21,10 +21,28 @@ dataUploadUI <- function(id){
                target = "_blank", "Click here to visit the Empatica website"),
         tags$br(),
         tags$br(),
-        tags$img(src= "https://www.empatica.com/assets/images/e4/2/e4_hero_device-lg-hdpi.jpg", 
-               height="150px", 
-               width="150px", 
-               align="left")
+        
+        fluidRow(
+          column(6,
+                 tags$img(src= "e4_hero_device-lg-hdpi.jpg", 
+                          height="150px", 
+                          width="150px", 
+                          align="left")
+          ),
+          column(6,
+          
+               tags$div(style = "width: 100%; height: 100%;",
+                        logo_image_with_link("logos/logo_deborg.svg", "https://www.deborg.nl/"),
+                        logo_image_with_link("logos/umcu.png", "https://www.umcutrecht.nl/nl/innovatie-in-de-psychiatrie"),
+                        logo_image_with_link("logos/mit_media_lab.png", "https://www.media.mit.edu/groups/affective-computing/overview/"),
+                        logo_image_with_link("logos/u_twente.png","https://www.utwente.nl/nl/bms/pgt/")
+               )
+                        
+          )
+        )
+        
+        
+
         
       ),
       

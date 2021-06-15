@@ -15,6 +15,7 @@ function(){
     shinyjs::useShinyjs(),
     shinytoastr::useToastr(),
     includeCSS("www/custom.css"),
+    includeCSS("www/logos.css"),
     
 #----- Choose directory, read files ----- 
     tabItems(
