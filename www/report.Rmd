@@ -45,8 +45,7 @@ dygraph(x_data, height = 200, width = 900, ylab = "Fraction bad data") %>%
 
   
   
-  
-  
+
   
 # Calendar events
 

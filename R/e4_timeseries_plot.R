@@ -53,7 +53,7 @@ e4_timeseries_plot <- function(data,
     if(!is.null(events)){
       
       # 'Start' events
-      for(i in seq_along(events)){
+      for(i in seq_len(nrow(events))){
         
         txt <- ifelse(events_label, events$Text[i], "")
         
