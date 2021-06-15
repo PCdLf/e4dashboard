@@ -8,7 +8,30 @@ dataUploadUI <- function(id){
       
       
       shinydashboard::box(
-        width = 8,
+
+        width = 6,
+        title = "Start",
+        collapsible = TRUE,
+        
+        
+        tags$p("This Shiny application was designed to visualize and process Empatica E4 data."),
+        tags$p("The Empatica E4 is a wearable wristband that can be used to record physiological signals such as heart rate, temperature, movement and skin conductance."),
+        tags$p("The data will not be permanently stored on the server, no trackers or cookies are used."),
+        tags$a(href="https://www.empatica.com/research/e4/", "Click here to visit the Empatica website"),
+        tags$br(),
+        tags$br(),
+        tags$a(img(src= "https://www.empatica.com/assets/images/e4/2/e4_hero_device-lg-hdpi.jpg", 
+               target = "_blank",
+               height="50%", 
+               width="50%", 
+               align="left"))
+        
+      ),
+      
+      shinydashboard::box(
+        width = 6,
+
+
         title = "Data input",
         
         tags$div(style = "width: 100%;",
@@ -18,7 +41,13 @@ dataUploadUI <- function(id){
         ),
         
         tags$p("Click Browse to select E4 zip files to use in the application."),
-        tags$p("The data will not be permanently stored on the server."),
+
+        fileInput(ns("select_zip_files"),
+                  label = "Choose ZIP file(s)", 
+                  multiple = TRUE, 
+                  accept = ".zip",
+                  buttonLabel = "Browse..."),
+
         
         side_by_side(
           fileInput(ns("select_zip_files"),
@@ -35,6 +64,7 @@ dataUploadUI <- function(id){
           
            
         ),
+
         
         uiOutput(ns("msg_files_selected")),
         tags$br(),
