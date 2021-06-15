@@ -26,7 +26,7 @@ validate_calendar <- function(data){
   
   nms <- c("Date" ,"Start", "End" , "Text")
   
-  all(nms) %in% names(data)
+  all(nms %in% names(data))
   
 }
 
@@ -62,11 +62,18 @@ calendarUI <- function(id){
                                    tags$p("Optionally, select an Excel spreadsheet or textfile with Calendar data."),
                                    tags$p("Please consult the documentation or Help button for the format of the calendar."),
                                    
-                                   fileInput(ns("select_calendar_file"),
-                                             label = "Choose Calendar (XLS/XLSX/TXT) file", 
-                                             multiple = FALSE, 
-                                             accept = c(".xls",".xlsx", ".txt"),
-                                             buttonLabel = "Browse...")
+                                   side_by_side(
+                                     fileInput(ns("select_calendar_file"),
+                                               label = "Choose Calendar (XLS/XLSX/TXT) file", 
+                                               multiple = FALSE, 
+                                               accept = c(".xls",".xlsx", ".txt"),
+                                               width = 300,
+                                               buttonLabel = "Browse..."),
+                                     tags$div(style = "padding-left: 50px; padding-top: 25px;",
+                                              actionButton(ns("btn_use_example_data"), "Or use example data", 
+                                                           icon = icon("hand-point-right"), class = "btn-info")  
+                                     )
+                                   )
                           ),
                           
                           tags$br(),
@@ -92,14 +99,29 @@ calendarModule <- function(input, output, session){
   
   
   calendar_out <- reactiveVal()
+  calendar_file <- reactiveVal()
   
   callModule(helpButton, "help", helptext = .help$calendar)
   
+  observeEvent(input$btn_use_example_data, {
+    calendar_file(
+      data.frame(
+        name = "Calendar_new format_Saskia.xlsx",
+        size = NA,
+        type = NA,
+        datapath = "www/example_data/Calendar_new format_Saskia.xlsx"
+      )
+    )
+  })
+  
+  
   observeEvent(input$select_calendar_file, {
+    calendar_file(input$select_calendar_file)
+  })
+  
+  observeEvent(calendar_file(), {
     
-    dfr <- input$select_calendar_file
-    
-    data <- read_calendar(dfr$datapath)
+    data <- read_calendar(calendar_file()$datapath)
     
     if(!validate_calendar(data)){
       toastr_error("Calendar data must have columns Date, Start, End, Text, (Color), click Help!")
