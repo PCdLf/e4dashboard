@@ -47,10 +47,11 @@ analysis_summary_table <- function(a){
   tibble::tribble(~Parameter, ~Value,
                   "Mean acceleration", mean(a$data$ACC$a, na.rm=TRUE),
                   "Mean temperature", mean(a$data$TEMP$TEMP, na.rm=TRUE),
-                  "Mean heartrate", mean(a$data$HR$HR, na.rm=TRUE),
+                  "Mean HR", mean(a$data$HR$HR, na.rm=TRUE),
                   "Nr. accepted beats", a$ibi$summary$beats$beats_accepted,
                   "Nr. original beats", a$ibi$summary$beats$beats_original,
                   "rMSSD", a$ibi$time_analysis$rMSSD,
+                  "Mean EDA", mean(a$data$EDA$EDA, na.rm = TRUE),
                   "Number of peaks per minute", nrow(a$eda_peaks) / time_range,
                   "Mean area under the curve (AUC)", mean(a$eda_peaks$AUC, na.rm = TRUE),
                   "% of data with EDA artefacts", 100 * mean(a$eda_bin$label == -1)
