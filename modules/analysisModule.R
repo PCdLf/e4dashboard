@@ -112,7 +112,7 @@ analysisModule <- function(input, output, session,
   
   observeEvent(input$btn_do_analysis, {
     
-    toastr_warning("Analysis started - please be patient, this can a minute or longer", 
+    toastr_warning("Analysis started - please be patient, this can take a minute or longer", 
                    timeOut = 0, extendedTimeOut = 3000)
     
     start <- ISOdatetime(
