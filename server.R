@@ -2,6 +2,7 @@ function(input, output, session) {
   disable_link("tabCalendar")
   disable_link("tabVisualization")
   disable_link("tabAnalysis")
+  disable_link("tabCut")
 
 
   data_in <- callModule(dataUploadModule, "data")
@@ -15,6 +16,7 @@ function(input, output, session) {
  
   callModule(batchModule, "batch") 
   
+  callModule(cutDataModule, "cut", data = data_in)
   
 }
 

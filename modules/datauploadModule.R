@@ -175,16 +175,16 @@ dataUploadModule <- function(input, output, session){
         
         enable_link("tabCalendar")
         enable_link("tabVisualization")
+        enable_link("tabCut")
         
         shinyjs::hide("div_upload_file")
         shinyjs::show("div_restart_application")
-        
         
       } else {
         
         disable_link("tabCalendar")
         disable_link("tabVisualization")
-        
+        disable_link("tabCut")
       }
       
     })

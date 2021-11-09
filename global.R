@@ -31,5 +31,6 @@ source("modules/visualizationModule.R")
 source("modules/visSeriesOptionsModule.R")
 source("modules/batchModule.R")
 source("modules/helpButton.R")
+source("modules/cutDataModule.R")
 
 

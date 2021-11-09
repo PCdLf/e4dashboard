@@ -105,7 +105,9 @@ report: >
 batch: >
   Users can batch process large amounts of Empatica E4 files here and set parameters accordingly.
   
-  
+cut: >
+  Cut your ZIP file into multiple files.\
+
   
 
 
