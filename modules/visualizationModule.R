@@ -52,9 +52,7 @@ visualizationModuleUI <- function(id){
                           tags$hr(),
                           
                           tags$h4("MOVE"),
-                          visSeriesOptionsUI(ns("move"), 
-                                             y_range = .cc$visualisation$move$yrange
-                                             )
+                          visSeriesOptionsUI(ns("move"), y_range = .cc$visualisation$move$yrange)
                           
                    )
                  )
@@ -66,7 +64,7 @@ visualizationModuleUI <- function(id){
              ),
              
              tabPanel(
-               title = tagList(icon("bar-chart"), "Plot"),
+               title = tagList(icon("chart-bar"), "Plot"),
                value = "plottab",
                withSpinner(
                  dygraphOutput(ns("dygraph_current_data1"), height = "140px")
@@ -216,7 +214,7 @@ visualizationModule <- function(input, output, session,
     
     # 
     toastr_success("Plot constructed, click on the 'Plot' tab!")
-    updateActionButton(session, "btn_make_plot", label = "Update plot", icon = icon("refresh"))
+    updateActionButton(session, "btn_make_plot", label = "Update plot", icon = icon("sync"))
     enable_link("tabAnalysis")
     
   })

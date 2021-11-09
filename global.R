@@ -3,7 +3,7 @@
 
 source("preload/load_packages.R")
 
-if(packageVersion("wearables") < "0.6"){
+if(packageVersion("wearables") < "0.7.2"){
   stop("Please update wearables!")
 }
 
