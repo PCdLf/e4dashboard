@@ -173,6 +173,11 @@ batchModule <- function(input, output, session){
         
         out <- read_and_process_e4(zips[i])
         
+        if(is.null(out)){
+          toastr_info(paste("Problem with",zips[i],"- skipping."))
+          next
+        }
+        
         fn_root <- basename(tools::file_path_sans_ext(zips[i]))
         out_file <- file.path(path_out, paste0(fn_root, ".rds"))
         
