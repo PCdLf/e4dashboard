@@ -9,7 +9,7 @@ batchModuleUI <- function(id){
       
       shinydashboard::box(
         width = 8,
-        title = "Batch Analysis",
+        title = tagList(icon("running"), "Batch Analysis"),
         
         
        fluidRow(
@@ -29,6 +29,15 @@ batchModuleUI <- function(id){
          column(6,
                 actionButton(ns("btn_select_folder_output"), "Select output folder", 
                              icon = icon("folder-open"), class = "btn-light"),
+                
+                shinyjs::hidden(
+                  tags$div(id = ns("div_same_as_input"),
+                     tags$br(),
+                     actionButton(ns("btn_output_same_input"), "Same as input folder", 
+                                  icon = icon("arrow-alt-circle-left"), class = "btn-secondary")
+                  )
+                ),
+                
                 uiOutput(ns("ui_folder_out"))
          )
        ),  
@@ -80,6 +89,12 @@ batchModule <- function(input, output, session){
     
   })
   
+  observe({
+    if(!is.null(folder_in())){
+      shinyjs::show("div_same_as_input")
+    }
+  })
+  
   observeEvent(input$btn_select_folder_output, {
     
     chc <- choose_directory()
@@ -88,15 +103,23 @@ batchModule <- function(input, output, session){
       folder_out(chc)  
     }
     
+  })
+  
+  observeEvent(input$btn_output_same_input, {
+    
+    folder_out(folder_in())
     
   })
   
+  
   output$ui_folder_in <- renderUI({
-    tags$p(folder_in())
+    tags$p(folder_in(),
+           style = "font-style: italic; font-size : 0.9em;")
   })
   
   output$ui_folder_out <- renderUI({
-    tags$p(folder_out())
+    tags$p(folder_out(),
+           style = "font-style: italic; font-size : 0.9em;")
   })
   
   observe({
@@ -123,13 +146,19 @@ batchModule <- function(input, output, session){
   output$ui_n_files_found <- renderUI({
     
     req(n_zip_files())
-    paste(n_zip_files(), "ZIP files found in the selected folder.")
+    tagList(
+      tags$p(paste(n_zip_files(), "ZIP files found in the selected folder.")),
+      tags$p("Select output folder to continue.")
+    )
+    
   })
   
 
   observeEvent(input$btn_run_batch, {
     
     toastr_info("Batch analysis started, this can take a while!")
+    
+    shinyjs::disable("btn_run_batch")
     
     zips <- zip_files() 
     path_out <- folder_out()
@@ -146,7 +175,7 @@ batchModule <- function(input, output, session){
         tm <- try(saveRDS(out, out_file))
         
         if(inherits(tm, "try-error")){
-          err <-  attr(tm, "condition")$message
+          err <- attr(tm, "condition")$message
           toastr_error(paste("Some problem with batch analysis, error message:", err))
           break
         }
@@ -158,7 +187,7 @@ batchModule <- function(input, output, session){
     })
     
     toastr_info("Batch analysis completed!")
-    
+    shinyjs::enable("btn_run_batch")
   })
   
 }

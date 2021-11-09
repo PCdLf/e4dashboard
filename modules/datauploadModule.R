@@ -80,7 +80,7 @@ dataUploadUI <- function(id){
           tags$div(id = ns("div_restart_application"),
            
                    actionButton(ns("btn_restart_app"), "Reset and start over",
-                                icon = icon("refresh"), class = "btn-lg btn-success")
+                                icon = icon("sync"), class = "btn-lg btn-success")
                    
           )
         )
