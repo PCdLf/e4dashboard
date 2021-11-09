@@ -115,6 +115,7 @@ dataUploadModule <- function(input, output, session){
     rv$zip_files <- input$select_zip_files
   })
   
+  
   observeEvent(rv$zip_files, {
     
     # Read selected ZIP files
@@ -129,41 +130,57 @@ dataUploadModule <- function(input, output, session){
       for(i in seq_along(fns)){
         
         incProgress(1/n, detail = fn_names[i])
-        data[[i]] <- wearables::read_e4(fns[i])
+        
+        out <- wearables::read_e4(fns[i])
+        if(is.null(out)){
+          
+          toastr_error("One or more data files empty - check data!")
+          break
+          
+        } else {
+          data[[i]] <- out  
+        }
         
       }
       
-      # If more than 1 zip file selected, row-bind them using our custom function
-      incProgress(1/n, detail = "Row-binding")
-      if(length(fns) > 1){
-        rv$data <- wearables::rbind_e4(data)
+      if(length(data) > 0){
+        
+        # If more than 1 zip file selected, row-bind them using our custom function
+        incProgress(1/n, detail = "Row-binding")
+        if(length(fns) > 1){
+          rv$data <- wearables::rbind_e4(data)
+        } else {
+          rv$data <- data[[1]]
+        }
+        
+        # Calculate aggregated version of the data for much quicker plotting
+        rv$data_agg <- wearables::aggregate_e4_data(rv$data)
+       
+        # Message: data read!
+        toastr_success("Data read successfully.")
+        
+        enable_link("tabCalendar")
+        enable_link("tabVisualization")
+        
       } else {
-        rv$data <- data[[1]]
+        
+        disable_link("tabCalendar")
+        disable_link("tabVisualization")
+        
       }
       
-      # Calculate aggregated version of the data for much quicker plotting
-      rv$data_agg <- wearables::aggregate_e4_data(rv$data)
-      
     })
 
-    # Message: data read!
-    toastr_success("Data read successfully.")
+  })
+  
+  output$msg_data_read <- renderUI({
     
-    output$msg_data_read <- renderUI({
-      
-        tags$body(
-          
-          p("Data was uploaded and read successfully. Go to the Calendar Tab.", style = "color: blue;"),
-          p("To read in a new dataset, upload a new Zip file.")
-          
-        )
-        
-      
-    })
-
-    enable_link("tabCalendar")
-    enable_link("tabVisualization")
-
+    req(rv$data)
+    tagList(
+      tags$p("Data was uploaded and read successfully. Go to the Calendar Tab.",
+             style = "color: blue;"),
+      tags$p("To read in a new dataset, upload a new Zip file.")
+    )
     
   })
   
