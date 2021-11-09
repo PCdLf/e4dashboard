@@ -35,7 +35,8 @@ dataUploadUI <- function(id){
                         logo_image_with_link("logos/logo_deborg.svg", "https://www.deborg.nl/"),
                         logo_image_with_link("logos/umcu.png", "https://www.umcutrecht.nl/nl/innovatie-in-de-psychiatrie"),
                         logo_image_with_link("logos/mit_media_lab.png", "https://www.media.mit.edu/groups/affective-computing/overview/"),
-                        logo_image_with_link("logos/u_twente.png","https://www.utwente.nl/nl/bms/pgt/")
+                        logo_image_with_link("logos/u_twente.png","https://www.utwente.nl/nl/bms/pgt/"),
+                        logo_image_with_link("logos/radboud.png","https://www.ru.nl/bsi/")
                )
                         
           )
