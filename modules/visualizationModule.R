@@ -22,8 +22,8 @@ visualizationModuleUI <- function(id){
                                         label = "Calendar events",
                                         value = TRUE),
                           
-                          
                           uiOutput(ns("ui_plot_agg_data")),
+                          uiOutput(ns("ui_plot_tags")),
                           
                           tags$br(),
                           tags$hr(),
@@ -35,8 +35,6 @@ visualizationModuleUI <- function(id){
                           tags$hr(),
                           helpButtonUI(ns("help"))
                           
-                          # other plot options?
-                            
                    ),
                    column(7,
                           
@@ -123,23 +121,44 @@ visualizationModule <- function(input, output, session,
     )
   )
  
+  # Option to plot aggregated data (or not),
+  # only visible if less than 2 hours of data, otherwise the plot will not be responsive.
   data_range_hours <- reactive({
     e4_data_datetime_range(data())
   })
   
-  
-  
   output$ui_plot_agg_data <- renderUI({
   
     if(data_range_hours() < 2){
-      radioButtons(session$ns("rad_plot_agg"), "Aggregate data",
-                   choices = c("Yes","No"), inline = TRUE)
+      tagList(
+        tags$hr(),
+        radioButtons(session$ns("rad_plot_agg"), "Aggregate data",
+                     choices = c("Yes","No"), inline = TRUE)
+      )
+      
     } else {
       NULL
     }
     
   })
   
+  
+  # Option to plot tags onto plot.
+  # Only visible if there was a tags.csv file in the uploaded ZIP file.
+  have_tag_data <- reactive({
+    !is.null(data()$data$tags)
+  })
+  
+  output$ui_plot_tags <- renderUI({
+    req(have_tag_data())
+    
+    tagList(
+      tags$hr(),
+      radioButtons(session$ns("rad_plot_tags"), "Add tags to plot",
+                   choices = c("Yes","No"), inline = TRUE)
+    )
+    
+  })
   
   
   observeEvent(input$btn_make_plot, {
@@ -180,6 +199,8 @@ visualizationModule <- function(input, output, session,
     plots <- e4_timeseries_plot(timeseries,
                                 main_title = input$txt_plot_main_title,
                                 calendar_data = annotatedata,
+                                plot_tags = isTRUE(input$rad_plot_tags == "Yes"),
+                                tags = data$data$tags,
                                 series_options = series_options()
     )
     
