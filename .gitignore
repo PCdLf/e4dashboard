@@ -5,3 +5,5 @@
 *.Rproj
 movies/
 test/
+.shiny_run/
+shinyShortcut.vbs
