@@ -122,11 +122,11 @@ visualizationModule <- function(input, output, session,
   # Option to plot aggregated data (or not),
   # only visible if less than 2 hours of data, otherwise the plot will not be responsive.
   data_range_hours <- reactive({
-    e4_data_datetime_range(data())
+    e4_data_datetime_range(data()$data)
   })
   
   output$ui_plot_agg_data <- renderUI({
-  
+    
     if(data_range_hours() < 2){
       tagList(
         tags$hr(),
