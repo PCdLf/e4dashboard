@@ -1,3 +1,22 @@
+
+
+# Utility function to make 4 timeseries based on a dataset
+# this timeseries is used in e4_timeseries_plot
+make_e4_timeseries <- function(data){
+  
+  list(
+    EDA = wearables::as_timeseries(data$EDA, name_col = "EDA"),
+    HR = wearables::as_timeseries(data$HR, name_col = "HR"),
+    TEMP = wearables::as_timeseries(data$TEMP, name_col = "Temperature"),
+    MOVE = wearables::as_timeseries(data$ACC, index = 5, name_col = "Movement")
+  )
+  
+}
+
+
+
+
+# Main function to make dynamic plot
 e4_timeseries_plot <- function(data, 
                                main_title = "",
                                calendar_data = NULL,

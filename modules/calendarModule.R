@@ -70,8 +70,10 @@ calendarUI <- function(id){
                                                width = 300,
                                                buttonLabel = "Browse..."),
                                      tags$div(style = "padding-left: 50px; padding-top: 25px;",
-                                              actionButton(ns("btn_use_example_data"), "Or use example data", 
-                                                           icon = icon("hand-point-right"), class = "btn-info")  
+                                              actionButton(ns("btn_use_example_data_large"), "Use large example data", 
+                                                           icon = icon("male"), class = "btn-info"),
+                                              actionButton(ns("btn_use_example_data_small"), "Use small example data", 
+                                                           icon = icon("child"), class = "btn-info")
                                      )
                                    )
                           ),
@@ -103,7 +105,7 @@ calendarModule <- function(input, output, session){
   
   callModule(helpButton, "help", helptext = .help$calendar)
   
-  observeEvent(input$btn_use_example_data, {
+  observeEvent(input$btn_use_example_data_large, {
     calendar_file(
       data.frame(
         name = "Calendar_new format_Saskia.xlsx",
@@ -114,6 +116,16 @@ calendarModule <- function(input, output, session){
     )
   })
   
+  observeEvent(input$btn_use_example_data_small, {
+    calendar_file(
+      data.frame(
+        name = "Calendar_Peter.xlsx",
+        size = NA,
+        type = NA,
+        datapath = "www/example_data/Calendar_Peter.xlsx"
+      )
+    )
+  })
   
   observeEvent(input$select_calendar_file, {
     calendar_file(input$select_calendar_file)

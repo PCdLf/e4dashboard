@@ -65,9 +65,11 @@ dataUploadUI <- function(id){
                   accept = ".zip",
                   buttonLabel = "Browse..."),
        
-        actionButton(ns("btn_use_example_data"), "Or use example data", 
-                       icon = icon("hand-point-right"), class = "btn-info"),
-          
+        actionButton(ns("btn_use_example_data_large"), "Use large example dataset", 
+                       icon = icon("male"), class = "btn-info"),
+        actionButton(ns("btn_use_example_data_small"), "Use small example dataset", 
+                     icon = icon("child"), class = "btn-info"),
+        
         uiOutput(ns("msg_files_selected")),
         tags$br(),
         htmlOutput(ns("msg_data_read"))
@@ -91,7 +93,7 @@ dataUploadModule <- function(input, output, session){
   callModule(helpButton, "help", helptext = .help$dataupload)
   
   
-  observeEvent(input$btn_use_example_data, {
+  observeEvent(input$btn_use_example_data_large, {
     rv$zip_files <- data.frame(
       name = "1574839870_A00204.zip",
       size = NA,
@@ -100,6 +102,14 @@ dataUploadModule <- function(input, output, session){
     )
   })
   
+  observeEvent(input$btn_use_example_data_small, {
+    rv$zip_files <- data.frame(
+      name = "1635148245_A00204.zip",
+      size = NA,
+      type = "application/x-zip-compressed",
+      datapath = "www/example_data/1635148245_A00204.zip"
+    )
+  })
   
   observeEvent(input$select_zip_files, {
     rv$zip_files <- input$select_zip_files
@@ -135,16 +145,7 @@ dataUploadModule <- function(input, output, session){
       rv$data_agg <- wearables::aggregate_e4_data(rv$data)
       
     })
-    
-    # Precalc. timeseries (for viz.)
-    rv$timeseries <- list(
-      EDA = wearables::as_timeseries(rv$data_agg$EDA, name_col = "EDA"),
-      HR = wearables::as_timeseries(rv$data_agg$HR, name_col = "HR"),
-      TEMP = wearables::as_timeseries(rv$data_agg$TEMP, name_col = "Temperature"),
-      MOVE = wearables::as_timeseries(rv$data_agg$ACC, index = 5, name_col = "Movement")
-    )
-    
-    
+
     # Message: data read!
     toastr_success("Data read successfully.")
     

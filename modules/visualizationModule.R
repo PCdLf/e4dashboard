@@ -23,6 +23,8 @@ visualizationModuleUI <- function(id){
                                         value = TRUE),
                           
                           
+                          uiOutput(ns("ui_plot_agg_data")),
+                          
                           tags$br(),
                           tags$hr(),
                           actionButton(ns("btn_make_plot"), 
@@ -102,6 +104,8 @@ visualizationModule <- function(input, output, session,
   
   callModule(helpButton, "help", helptext = .help$visualization)
   
+  plot_output <- reactiveVal()
+  
   # Call each module
   y_eda <- callModule(visSeriesOptionsModule, "eda")
   y_hr <- callModule(visSeriesOptionsModule, "hr")
@@ -119,15 +123,46 @@ visualizationModule <- function(input, output, session,
     )
   )
  
+  data_range_hours <- reactive({
+    e4_data_datetime_range(data())
+  })
   
-  plot_output <- reactiveVal()
+  
+  
+  output$ui_plot_agg_data <- renderUI({
+  
+    if(data_range_hours() < 2){
+      radioButtons(session$ns("rad_plot_agg"), "Aggregate data",
+                   choices = c("Yes","No"), inline = TRUE)
+    } else {
+      NULL
+    }
+    
+  })
+  
+  
   
   observeEvent(input$btn_make_plot, {
     
     data <- data()
     
-    req(data$timeseries)
+    req(data$data)
 
+    toastr_info("Plot construction started...")
+    
+    # Precalc. timeseries (for viz.)
+    if(is.null(input$rad_plot_agg)){
+      agg <- "Yes"
+    } else {
+      agg <- input$rad_plot_agg
+    }
+    
+    if(agg == "Yes"){
+      timeseries <- make_e4_timeseries(data$data_agg)
+    } else {
+      timeseries <- make_e4_timeseries(data$data)
+    }
+    
     show_tab("plottab")
 
     if(isTRUE(nrow(calendar()))){
@@ -142,7 +177,7 @@ visualizationModule <- function(input, output, session,
       annotatedata <- NULL
     }
     
-    plots <- e4_timeseries_plot(data$timeseries,
+    plots <- e4_timeseries_plot(timeseries,
                                 main_title = input$txt_plot_main_title,
                                 calendar_data = annotatedata,
                                 series_options = series_options()
