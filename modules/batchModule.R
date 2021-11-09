@@ -8,7 +8,7 @@ batchModuleUI <- function(id){
     fluidRow(
       
       shinydashboard::box(
-        width = 8,
+        width = 10,
         title = tagList(icon("running"), "Batch Analysis"),
         
         
@@ -18,7 +18,7 @@ batchModuleUI <- function(id){
                 tags$p("Select the input and output folder for a batch analysis of multiple ZIP files.")
          ),
          
-         column(6,
+         column(6, style = "padding: 16px;",
                 actionButton(ns("btn_select_folder_input"), "Select input folder", 
                              icon = icon("folder-open"), class = "btn-light"),
                 uiOutput(ns("ui_folder_in")),
@@ -26,7 +26,7 @@ batchModuleUI <- function(id){
                 tags$br(),
                 uiOutput(ns("ui_n_files_found"))
          ),
-         column(6,
+         column(6,style = "padding: 16px; border:",
                 actionButton(ns("btn_select_folder_output"), "Select output folder", 
                              icon = icon("folder-open"), class = "btn-light"),
                 

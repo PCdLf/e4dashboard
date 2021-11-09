@@ -31,12 +31,6 @@ plots[[4]] %>%
                                     range(analysis$data$EDA$DateTime)[2]))
 
 
-# plots[[1]]
-# plots[[2]]
-# plots[[3]]
-# plots[[4]]
-
-
 ```
 
 # IBI Data quality
