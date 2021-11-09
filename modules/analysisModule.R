@@ -174,6 +174,7 @@ analysisModule <- function(input, output, session,
     
     content = function(file){
       
+      toastr_info("Download in preparation ...")
       tempReport <- file.path(tempdir(), "report.Rmd")
       file.copy("www/report.Rmd", tempReport, overwrite = TRUE)
       

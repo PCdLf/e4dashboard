@@ -147,8 +147,12 @@ batchModule <- function(input, output, session){
     
     req(n_zip_files())
     tagList(
-      tags$p(paste(n_zip_files(), "ZIP files found in the selected folder.")),
-      tags$p("Select output folder to continue.")
+      tags$p(
+        tags$span(icon("info-circle"), style = "color: #27AE60;"),
+        paste(n_zip_files(), "ZIP files found in the selected folder.")),
+      
+      tags$p(tags$span(icon("exclamation-triangle"), style = "color: #CB4335;"),
+             "Select output folder to continue.")
     )
     
   })
