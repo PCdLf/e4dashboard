@@ -98,7 +98,8 @@ dataUploadModule <- function(input, output, session){
     data = NULL,
     timeseries = NULL,
     data_agg = NULL,
-    newdata = NULL
+    newdata = NULL,
+    fn_names = NULL
   )
   
   callModule(helpButton, "help", helptext = .help$dataupload)
@@ -132,7 +133,8 @@ dataUploadModule <- function(input, output, session){
     # Read selected ZIP files
     fns <- rv$zip_files$datapath
     fn_names <- rv$zip_files$name
-    
+    rv$fn_names <- fn_names
+
     # Read data into a list (Each element of the list contents from 1 zip file)
     data <- list()
     n <- length(fns) + 1
@@ -223,7 +225,8 @@ dataUploadModule <- function(input, output, session){
       data = rv$data,
       data_agg = rv$data_agg,
       timeseries = rv$timeseries,
-      newdata = rv$newdata
+      newdata = rv$newdata,
+      fn_names = rv$fn_names
     )
     
   })

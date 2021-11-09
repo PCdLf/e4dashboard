@@ -32,9 +32,9 @@ analysisModuleUI <- function(id){
                                      dateInput(ns("date_analysis_start"), label = "Date",
                                                value = NULL, min = NULL, max = NULL,
                                                width = 200),
-                                     numericInput(ns("time_hour_start"), "Hour", value = 0, width = 100),
-                                     numericInput(ns("time_minute_start"), "Minutes", value = 0, width = 100),
-                                     numericInput(ns("time_second_start"), "Seconds", value = 0, width = 100)
+                                     numericInput(ns("time_hour_start"), "Hour", value = 0, width = 100, max = 24),
+                                     numericInput(ns("time_minute_start"), "Minutes", value = 0, width = 100, max = 60),
+                                     numericInput(ns("time_second_start"), "Seconds", value = 0, width = 100, max = 60)
                                    ),
                                    tags$br(),
                                    
@@ -43,9 +43,9 @@ analysisModuleUI <- function(id){
                                      dateInput(ns("date_analysis_end"), label = "Date",
                                                value = NULL, min = NULL, max = NULL,
                                                width = 200),
-                                     numericInput(ns("time_hour_end"), "Hour", value = 0, width = 100),
-                                     numericInput(ns("time_minute_end"), "Minutes", value = 0, width = 100),
-                                     numericInput(ns("time_second_end"), "Seconds", value = 0, width = 100)
+                                     numericInput(ns("time_hour_end"), "Hour", value = 0, width = 100, max = 24),
+                                     numericInput(ns("time_minute_end"), "Minutes", value = 0, width = 100, max = 60),
+                                     numericInput(ns("time_second_end"), "Seconds", value = 0, width = 100, max = 60)
                                    )
                                    
                             )

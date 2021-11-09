@@ -23,7 +23,14 @@ cutDataModuleUI <- function(id){
                                    numericInput(ns("num_interval_length"), "Select interval length (minutes)",
                                                 value = 5, min = 1, step = 1),
                                    
-                                   uiOutput(ns("ui_can_do_cut")),
+                                   side_by_side(
+                                     actionButton(ns("btn_select_folder_output"), "Select output folder", 
+                                                  icon = icon("folder-open"), class = "btn-light"),
+                                     uiOutput(ns("ui_folder_out"), inline = TRUE)
+                                   ),
+                                   
+                                   
+                                   uiOutput(ns("ui_can_do_cut"), style = "padding-top: 24px;"),
                                    actionButton(ns("btn_do_cut"), "Perform cut", class = "btn-success btn-lg", 
                                                 icon = icon("play"))       
                                    
@@ -35,9 +42,9 @@ cutDataModuleUI <- function(id){
                                      dateInput(ns("date_analysis_start"), label = "Date",
                                                value = NULL, min = NULL, max = NULL,
                                                width = 200),
-                                     numericInput(ns("time_hour_start"), "Hour", value = 0, width = 100),
-                                     numericInput(ns("time_minute_start"), "Minutes", value = 0, width = 100),
-                                     numericInput(ns("time_second_start"), "Seconds", value = 0, width = 100)
+                                     numericInput(ns("time_hour_start"), "Hour", value = 0, width = 100, max = 24),
+                                     numericInput(ns("time_minute_start"), "Minutes", value = 0, width = 100, max = 60),
+                                     numericInput(ns("time_second_start"), "Seconds", value = 0, width = 100, max = 60)
                                    ),
                                    tags$br(),
                                    
@@ -46,9 +53,9 @@ cutDataModuleUI <- function(id){
                                      dateInput(ns("date_analysis_end"), label = "Date",
                                                value = NULL, min = NULL, max = NULL,
                                                width = 200),
-                                     numericInput(ns("time_hour_end"), "Hour", value = 0, width = 100),
-                                     numericInput(ns("time_minute_end"), "Minutes", value = 0, width = 100),
-                                     numericInput(ns("time_second_end"), "Seconds", value = 0, width = 100)
+                                     numericInput(ns("time_hour_end"), "Hour", value = 0, width = 100, max = 24),
+                                     numericInput(ns("time_minute_end"), "Minutes", value = 0, width = 100, max = 60),
+                                     numericInput(ns("time_second_end"), "Seconds", value = 0, width = 100, max = 60)
                                    )
                                    
                             )
@@ -135,26 +142,55 @@ cutDataModule <- function(input, output, session, data = reactive(NULL)){
   
   interval_can_be_cut <- reactive({
     
-    m <- as.numeric(difftime(start_time(), end_time(), units= "mins"))
-    m %% input$num_interval_length == 0
+    if(is.na(start_time()) || is.na(end_time())){
+      return(FALSE)
+    } else {
+      m <- as.numeric(difftime(start_time(), end_time(), units= "mins"))
+      m %% input$num_interval_length == 0  
+    }
     
   })
   
   observe({
-    shinyjs::toggleState("btn_do_cut", condition = interval_can_be_cut())
+    shinyjs::toggleState("btn_do_cut", condition = interval_can_be_cut() & !is.null(folder_out()))
   })
   
   output$ui_can_do_cut <- renderUI({
   
-    if(interval_can_be_cut()){
+    if(isTRUE(interval_can_be_cut())){
       NULL
     } else {
-      tags$p("Please select start and end times that can be exactly cut by the interval.",
-             style = "font-size: 0.9em; font-style: italic;")
+      
+      if(is.null(folder_out())){
+        tags$p("Please select an output folder.",
+               style = "font-size: 0.9em; font-style: italic;")        
+      } else {
+        tags$p("Please select start and end times that can be exactly cut by the interval.",
+               style = "font-size: 0.9em; font-style: italic;")
+      }
+      
     }
       
   })
   
+  folder_out <- reactiveVal()
+  
+  observeEvent(input$btn_select_folder_output, {
+    
+    chc <- choose_directory()
+    
+    if(!is.na(chc)){
+      folder_out(chc)
+    }
+    
+  })
+  
+  output$ui_folder_out <- renderUI({
+    
+    req(folder_out())
+    tags$p(folder_out(), style = "font-size: 0.9em; font-style: italic; padding-top: 8px;")
+    
+  })
   
   observeEvent(input$btn_do_cut, {
     
@@ -164,7 +200,11 @@ cutDataModule <- function(input, output, session, data = reactive(NULL)){
     wearables::filter_createdir_zip(data = data()$data,
                                     time_start = start_time(),
                                     time_end = end_time(),
-                                    interval = input$num_interval_length)
+                                    interval = input$num_interval_length, 
+                                    out_path = folder_out(),
+                                    fn_name = data()$fn_names[1]
+                                    )
+                                    
     toastr_success("ZIP file cut into pieces")
     shinyjs::enable("btn_do_cut")
     
