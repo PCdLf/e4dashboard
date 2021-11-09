@@ -57,22 +57,33 @@ dataUploadUI <- function(id){
           )
         ),
         
-        tags$p("Click Browse to select E4 zip files to use in the application."),
-
-        fileInput(ns("select_zip_files"),
-                  label = "Choose ZIP file(s)", 
-                  multiple = TRUE, 
-                  accept = ".zip",
-                  buttonLabel = "Browse..."),
-       
-        actionButton(ns("btn_use_example_data_large"), "Use large example dataset", 
-                       icon = icon("male"), class = "btn-info"),
-        actionButton(ns("btn_use_example_data_small"), "Use small example dataset", 
-                     icon = icon("child"), class = "btn-info"),
+        tags$div(id = ns("div_upload_file"),
+          tags$p("Click Browse to select E4 zip files to use in the application."),
+  
+          fileInput(ns("select_zip_files"),
+                    label = "Choose ZIP file(s)", 
+                    multiple = TRUE, 
+                    accept = ".zip",
+                    buttonLabel = "Browse..."),
+         
+          actionButton(ns("btn_use_example_data_large"), "Use large example dataset", 
+                         icon = icon("male"), class = "btn-info"),
+          actionButton(ns("btn_use_example_data_small"), "Use small example dataset", 
+                       icon = icon("child"), class = "btn-info"),
+          
+          uiOutput(ns("msg_files_selected")),
+          tags$br(),
+          htmlOutput(ns("msg_data_read"))
+        ),
         
-        uiOutput(ns("msg_files_selected")),
-        tags$br(),
-        htmlOutput(ns("msg_data_read"))
+        shinyjs::hidden(
+          tags$div(id = ns("div_restart_application"),
+           
+                   actionButton(ns("btn_restart_app"), "Reset and start over",
+                                icon = icon("refresh"), class = "btn-lg btn-success")
+                   
+          )
+        )
       )
     )
     
@@ -87,7 +98,8 @@ dataUploadModule <- function(input, output, session){
     zip_files = NULL,
     data = NULL,
     timeseries = NULL,
-    data_agg = NULL
+    data_agg = NULL,
+    newdata = NULL
   )
   
   callModule(helpButton, "help", helptext = .help$dataupload)
@@ -156,11 +168,17 @@ dataUploadModule <- function(input, output, session){
         # Calculate aggregated version of the data for much quicker plotting
         rv$data_agg <- wearables::aggregate_e4_data(rv$data)
        
+        rv$newdata <- runif(1)
+        
         # Message: data read!
         toastr_success("Data read successfully.")
         
         enable_link("tabCalendar")
         enable_link("tabVisualization")
+        
+        shinyjs::hide("div_upload_file")
+        shinyjs::show("div_restart_application")
+        
         
       } else {
         
@@ -195,13 +213,18 @@ dataUploadModule <- function(input, output, session){
     
   })
   
+  observeEvent(input$btn_restart_app, {
+    session$reload()
+  })
+  
   
   out <- reactive({
     
     list(
       data = rv$data,
       data_agg = rv$data_agg,
-      timeseries = rv$timeseries
+      timeseries = rv$timeseries,
+      newdata = rv$newdata
     )
     
   })
