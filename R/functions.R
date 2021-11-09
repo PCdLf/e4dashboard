@@ -33,7 +33,7 @@ side_by_side <- function(...){
 }
 
 
-logo_image_with_link <- function(img_path, url){
+logo_image_with_link <- function(img_path, url, width = 130){
   tags$a(tags$img(src = img_path, class = "grayscale", width = 130, style = "padding: 10px"), 
          href = url, target = "_blank")
 }

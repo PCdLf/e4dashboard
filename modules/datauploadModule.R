@@ -13,37 +13,33 @@ dataUploadUI <- function(id){
         title = tagList(icon("running"), "Start"),
         collapsible = TRUE,
         
-        
-        tags$p("This Shiny application was designed to visualize and process Empatica E4 data."),
-        tags$p("The Empatica E4 is a wearable wristband that can be used to record physiological signals such as heart rate, temperature, movement and skin conductance."),
-        tags$p("The data will not be permanently stored on the server, no trackers or cookies are used."),
-        tags$a(href="https://www.empatica.com/research/e4/", 
-               target = "_blank", "Click here to visit the Empatica website"),
         tags$br(),
-        tags$br(),
-        
         fluidRow(
+          column(6, 
+             tags$p("This Shiny application was designed to visualize and process Empatica E4 data."),
+             tags$p("The Empatica E4 is a wearable wristband that can be used to record physiological signals such as heart rate, temperature, movement and skin conductance."),
+             tags$p("The data will not be permanently stored on the server, no trackers or cookies are used.")
+          ),
+          
           column(6,
                  tags$img(src= "e4_hero_device-lg-hdpi.jpg", 
                           height="150px", 
                           width="150px", 
-                          align="left")
-          ),
-          column(6,
-          
-               tags$div(style = "width: 100%; height: 100%;",
-                        logo_image_with_link("logos/logo_deborg.svg", "https://www.deborg.nl/"),
-                        logo_image_with_link("logos/umcu.png", "https://www.umcutrecht.nl/nl/innovatie-in-de-psychiatrie"),
-                        logo_image_with_link("logos/mit_media_lab.png", "https://www.media.mit.edu/groups/affective-computing/overview/"),
-                        logo_image_with_link("logos/u_twente.png","https://www.utwente.nl/nl/bms/pgt/"),
-                        logo_image_with_link("logos/radboud.png","https://www.ru.nl/bsi/")
-               )
-                        
+                          align="left",href="https://www.empatica.com/research/e4/",target = "_blank")
+                          
           )
+        ),
+        fluidRow(style = "padding-top: 24px;",
+                 
+          column(3, logo_image_with_link("logos/logo_deborg.svg", "https://www.deborg.nl/", width = "100%")),
+          column(3, logo_image_with_link("logos/mit_media_lab.png", "https://www.media.mit.edu/groups/affective-computing/overview/", width = "100%")),
+          column(3, logo_image_with_link("logos/u_twente.png","https://www.utwente.nl/nl/bms/pgt/", width = "100%"))
+        ),
+        fluidRow(
+          column(3, logo_image_with_link("logos/umcu.png", "https://www.umcutrecht.nl/nl/innovatie-in-de-psychiatrie", width = "100%")),
+          column(3, logo_image_with_link("logos/radboud.png","https://www.ru.nl/bsi/", width = "100%"))
+          
         )
-        
-        
-
         
       ),
       
@@ -67,6 +63,8 @@ dataUploadUI <- function(id){
                     accept = ".zip",
                     buttonLabel = "Browse..."),
          
+          tags$p("Or, use one of the built-in example datasets.",
+                 style = "font-size: 0.95em; font-style: italic;"),
           actionButton(ns("btn_use_example_data_large"), "Use large example dataset", 
                          icon = icon("male"), class = "btn-info"),
           actionButton(ns("btn_use_example_data_small"), "Use small example dataset", 
