@@ -1,6 +1,8 @@
 # e4dashboard
 
-Functions and modules to visualize and analyze empatica e4 data. 
+Functions and modules to visualize and analyze empatica e4 data. For more information see:
+- de Looff, Duursma, Noordzij, Taylor, Jaques, Scheepers, de Schepper, Koldijk (2022). Wearables: An R Package With Accompanying Shiny Application for Signal Analysis of a Wearable Device Targeted at Clinicians and Researchers. Frontiers in Behavioral Neuroscience. [link](https://www.frontiersin.org/articles/10.3389/fnbeh.2022.856544/full) 
+
 
 ## How to get started
 
