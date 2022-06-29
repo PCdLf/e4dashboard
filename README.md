@@ -13,7 +13,7 @@ Functions and modules to visualize and analyze empatica e4 data. For more inform
 2) Run the E4 dashboard:
   - open the file global.r in RStudio
   - click "Run App" (in Rstudio)
-  - (note: the package wearables will be installed in the process.)
+  - (note: the package [wearables](https://github.com/PCdLf/wearables) will be installed in the process.)
 
 ## Functionality
 
