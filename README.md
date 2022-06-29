@@ -17,15 +17,23 @@ Functions and modules to visualize and analyze empatica e4 data.
 
 After recoring data with the Empatica E4 watch, the data will be synchronized to the [Empatica cloud](https://www.empatica.com/connect/login.php) (directly via the smartphone app or after extracting the data from the watch via cable and empatica software). Download this data.
 
+
+Our E4 dashboard can visualize and further process this data. There are several tabs:
+
 1) Data
-Select the downloaded Empatica zip file. The data will be loaded.
+- Select the downloaded Empatica zip file. The data will be loaded.
 
-3) Calendar
-Select a file with annotaions that can be shown next to the data.
+2) Calendar
+- Optionally: select a file with annotations that can be shown in the data plot. (The format is: Date, Start, End, Text, Color; as Excel or plain text)
 
-5) Visualization
-Adjust settings of the plot as desired an click "Make plot". A new tab will appear with the plot.
+3) Visualization
+- Adjust the settings of the plot as desired an click "Make plot". A new tab will appear with the interactive plot.
 
-7) Analysis
-8) Data cutter
-9) Batch analysis
+4) Analysis
+- An analysis can be run for a selected time period. The resulting report can be downloaded as .html, which can be opened in any broswer. It includes: an interactive plot of the data and annotations, two plots on data quality, a list of calendar events, the output of the analysis (several parameters calculated over the selected time period).
+
+6) Data cutter
+- If desired, the original data file can be cut into shorter analysis frames, eg 8 hours of data can be split into 5 minute data frames for further analysis.
+
+8) Batch analysis
+- The resulting shorter data frames can be loaded. In a batch analysis several parameters will be determined per frame. The resulting data is stored as .rds which can be opened in RStudio.
