@@ -1,3 +1,7 @@
+A new version of the E4 dashboard is available here: https://github.com/PCdLf/wearalyze 
+
+Note that the new Wearalyze dashboard also incorporates the Empatica EmbracePlus and Nowatch devices. The new Wearalyze dashboard is currently in development (latest update 2-5-2024). 
+
 # e4dashboard
 
 Functions and modules to visualize and analyze empatica e4 data. For more information see:
