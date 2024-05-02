@@ -37,9 +37,12 @@ Our E4 dashboard can visualize and further process this data. There are several 
 
 4) Analysis
 - An analysis can be run for a selected time period. The resulting report can be downloaded as .html, which can be opened in any broswer. It includes: an interactive plot of the data and annotations, two plots on data quality, a list of calendar events, the output of the analysis (several parameters calculated over the selected time period).
-
+  
 6) Data cutter
 - If desired, the original data file can be cut into shorter analysis frames, eg 8 hours of data can be split into 5 minute data frames for further analysis.
 
 8) Batch analysis
 - The resulting shorter data frames can be loaded. In a batch analysis several parameters will be determined per frame. The resulting data is stored as .rds which can be opened in RStudio.
+
+- Acknowledgements
+- Financial support for implementation and future development of E4 dashboard was available from an implementation and innovation fund from health insurers Netherlands, and ZonMw (grant number 06360322210023). 
